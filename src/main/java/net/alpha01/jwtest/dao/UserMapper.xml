@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.UserMapper">
+	<select id="getAll" resultType="net.alpha01.jwtest.beans.User">
+		select * from users order by username;
+	</select>
+
+	<select id="get" parameterType="net.alpha01.jwtest.beans.User" resultType="net.alpha01.jwtest.beans.User">
+		select * from users where username=#{username}
+		<if test="password!=null">
+			AND password=PASSWORD(#{password})
+		</if>
+		<if test="ldap!=null">
+			AND ldap=#{ldap}
+		</if>
+	</select>
+	
+	<select id="getById" parameterType="int" resultType="net.alpha01.jwtest.beans.User">
+		select * from users where id=#{id}
+	</select>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.User">
+		insert into users (username,password,email,name,ldap) values (#{username},PASSWORD(#{password}),#{email},#{name},#{ldap});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.User" flushCache="true">
+		update users set username=#{username},email=#{email},ldap=#{ldap},name=#{name}
+		<if test="password!=null">
+			,password=PASSWORD(#{password})
+		</if>
+		 where id=#{id} 
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.User">
+		delete from users where id=#{id}
+	</delete>
+	
+	<select id="getRoles" parameterType="net.alpha01.jwtest.beans.User" resultType="net.alpha01.jwtest.beans.Role">
+		select g.* from roles g inner join users_roles ug on ug.id_role=g.id where ug.id_user=#{id}
+	</select>
+	
+	<insert id="associateRole" parameterType="net.alpha01.jwtest.dao.UserMapper$GroupUserAssociation">
+		insert into users_roles (id_user,id_role) values(#{idUser},#{idGroup})
+	</insert>
+	
+	<delete id="deassociateRoles" parameterType="int">
+		delete from users_roles where id_user= #{id}
+	</delete>
+	
+</mapper>

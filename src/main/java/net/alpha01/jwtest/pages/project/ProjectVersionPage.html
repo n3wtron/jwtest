@@ -1,0 +1,69 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="title"><wicket:message key="title"/></div>
+	<div id="addForm">
+		<form wicket:id="versionsForm">
+			<table id="borderTable" style="margin:auto;">
+				<tr>
+					<td>
+						<wicket:message key="version.add"/>
+					</td>
+					<td>
+						<input type="text" wicket:id="versionFld"/>
+					</td>
+					<td>
+						<input type="button" wicket:id="addVersionBtn" wicket:message="value:add"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<hr/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<wicket:message key="versions"/>
+					</td>
+					<td>
+						<select wicket:id="versionsFld"></select>
+					</td>
+					<td>
+						<input type="button" wicket:id="delBtn" wicket:message="value:delete"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<hr/>
+					</td>
+				</tr>
+				<tr>
+					<td><wicket:message key="update"/>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<td><wicket:message key="version"/>:</td>
+								<td>
+									<input type="text" wicket:id="updVersionFld"/><br/>
+								</td>
+							</tr>
+							<tr>
+								<td><wicket:message key="released"/>:</td>
+								<td>
+									<span wicket:id="releasedFld"></span>
+								</td>
+							</tr>
+						</table> 
+					</td>
+					<td>
+						<input type="button" wicket:id="updateBtn" wicket:message="value:update"/>
+					</td>
+				</tr>
+				
+				
+			</table>
+		</form>
+	</div>
+</wicket:extend>
+</html>

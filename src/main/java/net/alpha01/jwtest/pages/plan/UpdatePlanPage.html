@@ -1,0 +1,33 @@
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="title">
+		<wicket:message key="title" />
+	</div>
+	<div id="addForm">
+		<form wicket:id="addPlanForm">
+			<table style="margin:auto;">
+				<tr>
+					<td><wicket:message key="name" />:</td>
+					<td><input type="text" wicket:id="nameFld" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<div id="tableTitle"><wicket:message key="requirements"/></div>
+						<div id="dataTable"><select wicket:id="requirements"></select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<div id="tableTitle"><wicket:message key="testcases"/></div>
+						<div wicket:id="testCasesSelectionPanel"></div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"	wicket:message="value:update" /> </td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</wicket:extend>
+</html>

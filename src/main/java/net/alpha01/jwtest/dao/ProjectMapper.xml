@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.ProjectMapper">
+
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Project">
+		select * from projects where id = #{id}
+	</select>
+	
+	<select id="getAll" resultType="net.alpha01.jwtest.beans.Project">
+		select * from projects order by name
+	</select>
+	
+	<insert id="add" parameterType="net.alpha01.jwtest.beans.Project" keyProperty="id" useGeneratedKeys="true">
+		insert into projects (name,description,mantis_url) values (#{name},#{description},#{mantis_url});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.Project">
+		update projects set name=#{name}, description=#{description},mantis_url=#{mantis_url} where id=#{id};
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Project">
+		delete from projects where id=#{id};
+	</delete>
+	
+	<select id="getRoles" parameterType="net.alpha01.jwtest.dao.ProjectMapper$ProjectUserRoles" resultType="net.alpha01.jwtest.beans.Role">
+		select g.* from roles g inner join projects_users_roles pg on pg.id_role=g.id where pg.id_project=#{idProject} and pg.id_user=#{idUser}
+	</select>
+	
+	<delete id="deassociateRoles" parameterType="net.alpha01.jwtest.beans.Project">
+		delete from projects_users_roles where id_project=#{id}
+	</delete>
+	
+	<insert id="associateRole" parameterType="net.alpha01.jwtest.dao.ProjectMapper$ProjectUserRoles">
+		insert into projects_users_roles (id_project,id_user,id_role) values(#{idProject},#{idUser},#{idRole});
+	</insert>
+	
+</mapper>

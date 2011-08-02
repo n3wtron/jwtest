@@ -1,0 +1,31 @@
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="topic">
+		<div id="menu">
+			<a wicket:id="addStepLnk"><img width="32px" height="32px" wicket:id="addStepImg" wicket:message="title:step.add"/></a>
+			<hr>
+			<a wicket:id="updTestLnk"><img width="32px" height="32px" wicket:id="updateTestImg" wicket:message="title:test.update"/></a>
+			<a wicket:id="delTestLnk"><img width="32px" height="32px" wicket:id="deleteTestImg" wicket:message="title:test.delete"/></a>
+		</div>
+		<div id="title">
+			<b><wicket:message key="testcase"/></b>: <span wicket:id="testCaseName"></span>
+		</div>
+		<div id="description">
+			<b><wicket:message key="requirement"/></b>: <a wicket:id="requirementLnk"><span wicket:id="requirementName"></span></a><br/><br/>
+			<b><wicket:message key="description"/>:</b><br/><span wicket:id="testCaseDescription"></span><br/>
+			<b><wicket:message key="expected_result"/>:</b><br/><span wicket:id="testCaseExpectedResult"></span>
+			<div style="text-align:center;" wicket:id="attachmentsPanel"></div>
+		</div>
+		<div id="description" style="width:100%; text-align:center;"><img wicket:id="chartImage"/></div>	
+	</div>
+	<div id="content">
+		<form wicket:id="selForm">
+			<div wicket:id="stepsPanel"></div>
+			<div id="bottomButton">
+				<input type="submit" wicket:id="delBtn" wicket:message="value:delete"/>
+			</div>
+		</form><br/>
+		<div wicket:id="resultsTable"></div>
+	</div>
+</wicket:extend>
+</html>

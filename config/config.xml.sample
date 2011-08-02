@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+	<security>
+		<admin>
+			<username>admin</username>
+			<password>admin</password>
+			<email>admin@admin.com</email>
+		</admin>
+		<ldap>
+			<enabled>true</enabled>
+			<server>ldap.domain.com</server>
+			<port>389</port>
+			<searchBase>o=company,c=com</searchBase>
+			<users>
+				<ou>users</ou>
+				<searchString>uid=${username}</searchString>
+			</users>
+		</ldap>
+	</security>
+	<attachment>
+		<directory>/var/lib/jwtest/attachments</directory>
+	</attachment>
+	<db>
+		<host>localhost</host>
+		<port>3306</port>
+		<name>jwtest</name>
+		<username>dbuser</username>
+		<password>dbpassword</password>
+	</db>
+	<dot>
+		<path>/usr/bin/dot</path>
+		<rankdir>BT</rankdir>
+		<shape>box</shape>
+	</dot>
+	<mantis>
+		<url>mantisurl</url>
+	</mantis>
+</configuration>

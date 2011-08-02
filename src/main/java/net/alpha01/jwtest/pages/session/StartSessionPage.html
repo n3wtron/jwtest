@@ -1,0 +1,29 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="topic">
+		<div id="title">
+			<wicket:message key="title" />
+		</div>
+	</div>
+	<div id="content" align="center">
+		<form wicket:id="addForm">
+			<table>
+				<tr>
+					<td><wicket:message key="plan"/></td>
+					<td><select wicket:id="planFld"></select></td>
+				</tr>
+				<tr>
+					<td><wicket:message key="version"/></td>
+					<td><select wicket:id="versionFld"></select></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit" wicket:message="value:start"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</wicket:extend>
+</html>

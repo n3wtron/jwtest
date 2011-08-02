@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:panel>
+	<form wicket:id="addForm">
+		<table id="borderTable" style="margin:auto;">
+			<tr>
+				<td id="tableTitle"> 
+					<wicket:message key="attachment.add"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b><wicket:message key="description"/>:</b><br/>
+					<input type="text" wicket:id="descriptionFld" size="35"/><br/>
+					<input style="border:none;"type="file" wicket:id="fileFld"/>
+				</td>
+			</tr>
+			<tr>
+				<td  style="text-align:center">
+					<input type="submit" value="Upload"/>
+				</td>
+			</tr>
+			<tr>
+				<td  style="text-align:center">
+					<div wicket:id="fbPanel"></div>
+				</td>
+			</tr>
+		</table>
+	</form>
+</wicket:panel>
+</body>
+</html>

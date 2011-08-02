@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://${db.host}:${db.port}/${db.name}?autoReconnect=true" />
+				<property name="username" value="${db.username}" />
+				<property name="password" value="${db.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="net/alpha01/jwtest/dao/ProjectMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/RequirementMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/TestCaseMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/StepMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/PlanMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/SessionMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/ProjectVersionMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/ResultMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/UserMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/RoleMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/AttachmentMapper.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,13 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="title"><wicket:message key="title"/></div>
+	<div id="delForm">
+		<wicket:message key="question"/> <b><span wicket:id="projectName"></span></b> ??
+		<form wicket:id="delProjectForm">
+			<input type="submit" wicket:message="value:yes" wicket:id="YesBtn"/>
+			<input type="submit" wicket:message="value:no" wicket:id="NoBtn" />
+		</form>
+	</div>
+</wicket:extend>
+</html>

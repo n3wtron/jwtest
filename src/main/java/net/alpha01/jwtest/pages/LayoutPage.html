@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JWTest</title>
+</head>
+<body>
+	<div id="container">
+		<div id="mainTop">
+			<div id="logo">
+				<img wicket:id="icon"/>
+			</div>
+			<div id="userMenu" wicket:id="logoutPanel"></div>
+			<div id="mainTitle">
+				JWTest :: <span wicket:id="currProjectName"></span>
+			</div>
+			<div id="topMenu">
+				<div id="mainMenu" wicket:id="mainMenuPanel"></div>
+				<div id="projectSelect">
+					<form wicket:id="projectForm">
+						<wicket:message key="project"/>: <select wicket:id="projectFld"></select>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<div id="mainContent">
+			<div id="mainChild">
+				
+				<wicket:child />
+			</div>
+			<div id="fbPanel" wicket:id="fbPanel"></div>
+		</div>
+	</div>
+</body>
+</html>

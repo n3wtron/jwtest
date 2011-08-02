@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.RoleMapper">
+	<select id="getAll" resultType="net.alpha01.jwtest.beans.Role">
+		select * from roles  order by name
+	</select>
+
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Role">
+		select * from roles id=#{id}
+	</select>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.Role">
+		insert into roles (name) values (#{name});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.Role" flushCache="true">
+		update roles set name=#{name} where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Role">
+		delete from roles where id=#{id}
+	</delete>
+	
+</mapper>

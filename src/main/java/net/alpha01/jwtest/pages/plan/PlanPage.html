@@ -1,0 +1,17 @@
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="topic">
+		<div id="menu">
+			<a wicket:id="updatePlanLnk"><img width="32px" height="32px" wicket:id="updatePlanImg" wicket:message="title:plan.update"/></a>
+			<a wicket:id="deletePlanLnk"><img width="32px" height="32px" wicket:id="deletePlanImg" wicket:message="title:plan.delete"/></a>
+		</div>
+		<div id="title">
+			<wicket:message key="title" />: <span wicket:id="planName"></span>
+		</div>
+	</div>
+	<div id="content">
+		<div wicket:id="testsTable"></div><br/>
+		<div wicket:id="sessionsTable"></div>
+	</div>
+</wicket:extend>
+</html>

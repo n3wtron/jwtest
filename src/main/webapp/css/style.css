@@ -1,0 +1,286 @@
+body {
+	font-family: verdana;
+	font-size: 13px;
+	margin-top: 5px;
+	margin-left:2%;
+	margin-right:2%;
+	background-color: #CCCCCC;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:visited{
+	color:blue;
+}
+
+a:hover{
+	color:blue;
+}
+
+
+select {
+	font-family: verdana;
+	background-color: white;
+}
+
+input {
+	border: 1px solid #000000;
+	font-family: verdana;
+	background-color: white;
+}
+
+select {
+	border: 1px solid #000000;
+	font-family: verdana;
+	background: white;
+}
+
+img {
+	border:none;
+	vertical-align: middle;
+}
+
+#container {
+	background-color: #FDFDFD;
+	margin: 0 auto;
+	width: 100%;
+}
+
+#mainTop {
+	float: left;
+	clear: both;
+	margin: 0 auto;
+	width: 100%;
+	background-color: #D5E1DD;
+	border: 1px solid #000000;
+}
+
+#logo {
+	width: 80px;
+	height: 80px;
+	float: left;
+	clear: left;
+}
+#logo img{
+	width:100px;
+	height:100px;
+}
+
+#mainTitle {
+	padding-left: 5px;
+	margin-left:0px; 
+	font-size : 18px;
+	font-weight: bold;
+	vertical-align: middle;
+}
+
+#topMenu {
+	left: 0px;
+}
+
+#mainMenu {
+	padding: 5px;
+	float: left;
+}
+
+#mainMenu td {
+	padding-right: 20px;
+}
+
+#userMenu {
+	padding-top:2px;
+	float:right;
+	clear:right;
+	font-size: 11px;
+	text-align: right;
+	padding-bottom:0px;
+	padding-right: 5px;
+}
+
+#userMenu input {
+	font-size: 11px;
+}
+
+#projectSelect {
+	clear:right;
+	float:right;
+	margin-top:35px;
+	margin-right:5px;
+	text-align: right;
+}
+
+#mainContent {
+	clear: both;
+	width: 100%;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+#mainChild {
+	padding: 5px;
+}
+
+#fbPanel {
+	margin-left: 150px;
+	clear: both;
+}
+
+#title {
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#description {
+	padding-right:220px;
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+
+#topic {
+	float: left;
+	width: 100%;
+	border-bottom: 1px solid #000000;
+}
+
+#menu {
+	width: 150px;
+	padding: 5px;
+	border-left: 1px solid #000000;
+	float: right;
+	line-height: 3;
+	text-align: center;
+}
+
+#menuLarge {
+	width: 300px;
+	padding: 5px;
+	border-left: 1px solid #000000;
+	float: right;
+}
+
+#borderTable {
+	border: 1px solid #000000;
+	border-collapse: collapse;
+}
+
+#borderTable th {TestCases
+	border: 1px solid #000000;
+	border-collapse: collapse;
+	font-size: 14px;
+	background-color: #D5E1DD;
+}
+
+#borderTable td {
+	padding: 5px;
+}
+
+#dataTable {
+	border: 1px solid #000000;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#dataTable th {
+	border: 1px solid #000000;
+	padding: 4px;
+}
+
+#dataTable td {
+	text-align: left;
+	padding: 5px;
+	padding-top:8px;
+	padding-bottom:8px;
+	border-left:1px solid #000000;
+}
+
+.pairRow{
+	
+}
+
+.unpairRow{
+	background-color: #D5E1DD;
+}
+
+.lastRow{
+	border-bottom:1px solid #000000;
+}
+
+.dataTable {
+	border: 1px solid #000000;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.dataTable th {
+	border: 1px solid #000000;
+	padding: 4px;
+}
+
+.dataTable td {
+	text-align: left;
+	padding: 4px;
+}
+
+.maximizedColumn {
+	width: auto;
+}
+
+.minimizedColumn {
+	width: 5%;
+}
+#content {
+	padding-top: 15px;
+	clear: both;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding-bottom: 15px;
+}
+
+#tableTitle {
+	border-top: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+	background-color: #D5E1DD;
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+
+#bottomButton {
+	background-color: #D5E1DD;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	min-height: 20px;
+	padding:5px;
+}
+
+#delForm {
+	margin: 0 auto;
+	text-align: center;
+}
+
+#closeablePanel{
+	margin-top:5px;
+	border:1px solid #000000;
+	border-collapse: collapse;
+}
+
+#closeableTitle{
+	background-color: #D5E1DD;
+}
+
+.closeableContent{
+	padding:0px;
+	border-collapse: collapse;
+}
+
+#closeableLnk{
+	float:right;
+	padding-right:5px;
+}

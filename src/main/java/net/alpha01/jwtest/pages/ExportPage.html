@@ -1,0 +1,38 @@
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" >
+<wicket:extend>
+	<div id="topic">
+		<div id="title"><wicket:message key="title"/></div>
+	</div>
+	<div id="content">
+		<div style="margin:0 auto; width:500px; ">
+			<a wicket:id="requirementsExportLnk">
+				 <img width="32px" height="32px" wicket:id="exportRequirementsImg"/>
+				<wicket:message	key="requirements.export"></wicket:message><br /> 
+			</a>
+			<a wicket:id="testcasesExportLnk">
+				 <img width="32px" height="32px" wicket:id="exportTestcasesImg"/>
+				<wicket:message	key="testcases.export"></wicket:message><br /> 
+			</a>
+			<div style="text-align:center;">
+				<div id="title">
+					<wicket:message key="plan.export"/>
+				</div>
+				<form wicket:id="planForm">
+					<select wicket:id="planFld"></select>
+					<input type="submit" wicket:message="value:export"/>
+				</form>
+			</div>
+			
+			<div style="text-align:center;">
+				<div id="title">
+					<wicket:message key="session.export"/>
+				</div>
+				<form wicket:id="sessionForm">
+					<select wicket:id="sessionFld"></select>
+					<input type="submit" wicket:message="value:export"/>
+				</form>
+			</div>
+		</div>
+	</div>
+</wicket:extend>
+</html>

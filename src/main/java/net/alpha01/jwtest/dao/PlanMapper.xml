@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.PlanMapper">
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Plan">
+		select * from plans where id = #{id}
+	</select>
+	<select id="getAll" parameterType ="int" resultType="net.alpha01.jwtest.beans.Plan">
+		select * from plans where id_project = #{id_project}
+	</select>
+	<select id="getAllStat" parameterType ="int" resultType="net.alpha01.jwtest.beans.Plan">
+		select p.*,(select count(id) from sessions where id_plan=p.id) as nSessions, 
+		(select count(id) from testcases as t inner join plans_testcases as pt on pt.id_testcase=t.id where pt.id_plan=p.id) as nTests from plans as p  where p.id_project = #{id_project} order by id desc
+	</select>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.Plan">
+		insert into plans (id_project,name,creation_date) values (#{id_project},#{name},#{creation_date});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.Plan" flushCache="true">
+		update plans set id_project=#{id_project},name=#{name} where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Plan">
+		delete from plans where id=#{id}
+	</delete>
+	
+	<insert id="addTestCase" parameterType="net.alpha01.jwtest.dao.PlanMapper$FK" >
+		insert into plans_testcases (id_plan,id_testcase) value(#{id_plan},#{id_testcase})
+	</insert>
+	
+	<delete id="deleteTestCase" parameterType="int" flushCache="true">
+		delete from plans_testcases where id_plan=#{id_plan}
+	</delete>
+</mapper>

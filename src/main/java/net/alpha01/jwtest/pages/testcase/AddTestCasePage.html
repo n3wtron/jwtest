@@ -1,0 +1,58 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<script type="text/javascript" src="js/nicEdit.js"></script>
+	<script type="text/javascript">
+		bkLib.onDomLoaded(nicEditors.allTextAreas);
+	</script>
+	<div id="title">
+		<wicket:message key="title" />
+		<a wicket:id="requirementLnk"><span wicket:id="requirementName"></span>
+		</a>
+	</div>
+	<div id="addform">
+		<form wicket:id="addForm">
+			<table>
+				<tr>
+					<td><wicket:message key="name" />
+					</td>
+					<td><input type="text" wicket:id="nameFld" size="80" />
+					</td>
+				</tr>
+				<tr>
+					<td><wicket:message key="dependencies" />
+					</td>
+					<td><select wicket:id="dependencyFld"></select>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2"><wicket:message key="description" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><textarea cols="80" rows="15"
+							wicket:id="descriptionFld"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><wicket:message key="expected_result" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><textarea cols="80" rows="15"
+							wicket:id="expectedResultFld"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input wicket:id="addBtn" type="submit" wicket:message="value:add" />
+					<input wicket:id="addUpdBtn" type="submit" wicket:message="value:add_and_update" />
+					<input wicket:id="addAndStepBtn" type="submit" wicket:message="value:add_and_step" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</wicket:extend>
+</html>

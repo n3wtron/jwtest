@@ -1,0 +1,38 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="topic">
+		<div id="menu">
+			<a wicket:id="addTestLnk"><img width="32px" height="32px" wicket:id="addTestImg" wicket:message="title:testcase.add"/></a>
+			<hr>
+			<a wicket:id="updRequirementLnk"><img width="32px" height="32px" wicket:id="updateRequirementImg" wicket:message="title:requirement.update"/></a>
+			<a wicket:id="delRequirementLnk"><img width="32px" height="32px" wicket:id="deleteRequirementImg" wicket:message="title:requirement.delete"/></a>
+		</div>
+		<div id="title">
+			<wicket:message  key="requirement"/>: <span wicket:id="requirementName"></span>
+		</div>
+		<div id="description">
+			<span wicket:id="requirementDescription"></span>
+			<div style="text-align:center;" wicket:id="chartPanel"></div><br/>
+			<div style="text-align:center;" wicket:id="attachmentsPanel"></div>
+		</div>
+	</div>
+	<div id="content">
+		<br/>
+		<div id="tests">
+			<form wicket:id="testsForm">
+				<div wicket:id="testTable"></div>
+				<div id="bottomButton">
+					<select wicket:id="requirementsMoveList"></select>
+					<input type="submit" wicket:id="copyBtn" wicket:message="value:copy"/>
+					<input type="submit" wicket:id="moveBtn" wicket:message="value:move"/>
+					<input type="submit" wicket:id="deleteBtn" wicket:message="value:delete"/>
+				</div>
+					<div id="bottomButton" style="text-align:center;">
+					<a wicket:id="dotGraphLnk">Dependency Graph</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</wicket:extend>
+</html>

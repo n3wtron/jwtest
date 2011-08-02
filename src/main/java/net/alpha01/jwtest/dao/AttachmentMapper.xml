@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.AttachmentMapper">
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Attachment">
+		select * from attachment where id=#{id}
+	</select>
+	
+	<insert id="add" parameterType="net.alpha01.jwtest.beans.Attachment" useGeneratedKeys="true" keyProperty="id">
+		insert into attachments (id_project,name,description,extension) values (#{id_project},#{name},#{description},#{extension});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.Attachment" >
+		update attachments set id_project=#{id_project},name=#{name},description=#{description},extension=#{extension} where id=#{id};
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Attachment">
+		delete from attachments where id=#{id}
+	</delete>
+	
+	<insert id="associateRequirement" parameterType="net.alpha01.jwtest.dao.AttachmentMapper$AttachmentAssociation">
+		insert into attachments_requirements(id_attachment, id_requirement) values (#{idAttachment},#{idAssociation})
+	</insert>
+	
+	<insert id="associateTestCase" parameterType="net.alpha01.jwtest.dao.AttachmentMapper$AttachmentAssociation">
+		insert into attachments_testcases(id_attachment, id_testcase) values (#{idAttachment},#{idAssociation})
+	</insert>
+	
+	<insert id="associateResult" parameterType="net.alpha01.jwtest.dao.AttachmentMapper$AttachmentAssociation">
+		insert into attachments_results(id_attachment, id_result) values (#{idAttachment},#{idAssociation})
+	</insert>
+	
+	<select id="getByRequirement" parameterType="int" resultType="net.alpha01.jwtest.beans.Attachment">
+		select a.* from attachments a inner join attachments_requirements ar on ar.id_attachment=a.id where ar.id_requirement=#{id};
+	</select>
+	
+	<select id="getByTestcase" parameterType="int" resultType="net.alpha01.jwtest.beans.Attachment">
+		select a.* from attachments a inner join attachments_testcases at on at.id_attachment=a.id where at.id_testcase=#{id};
+	</select>
+	
+	<select id="getByResult" parameterType="int" resultType="net.alpha01.jwtest.beans.Attachment">
+		select a.* from attachments a inner join attachments_results ar on ar.id_attachment=a.id where ar.id_result=#{id};
+	</select>
+	
+</mapper>

@@ -1,0 +1,42 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="topic">
+		<div id="menu" style="line-height: 1;">
+			<a wicket:id="addRecycleLnk"><img width="32px" height="32px" wicket:id="addRecycleImg" wicket:message="title:recycle.add"/></a>
+			<table style="width:100%;">
+				<tr>
+					<th align="center">Mantis</th>
+				</tr>
+				<tr wicket:id="mantisRow">
+					<td>
+						<a wicket:id="mantisLnk" target="_blank"><span wicket:id="mantisId"></span></a>
+						<a wicket:id="delMantisLnk">del</a>
+					</td>
+				</tr>
+			</table>
+			<hr/>
+			<form wicket:id="addMantisForm">
+				MantisID<br/>
+				<input type="text" wicket:id="mantidId"><br/>
+				<input type="submit" wicket:message="value:add"/>
+			</form>
+		</div>
+		<div id="title">
+			<wicket:message key="title" /><br/>
+		</div>
+		<div id="description">
+			<b><wicket:message key="testcase"/></b>: <a wicket:id="testcasePageLnk"><span wicket:id="testcaseName"></span></a><br/>
+			<b><wicket:message key="session"/></b>: <a wicket:id="sesPageLnk"><span wicket:id="sessionName"></span></a><br/>
+			<b><wicket:message key="result"/></b>: <span wicket:id="result"></span><br/>
+			<span wicket:id="parentContainer"><b><wicket:message key="recycle"/>:</b> <a wicket:id="parentLnk"><span wicket:id="parentName"></span></a><br/></span>
+			<b>Note:</b><br/>
+			<span wicket:id="note"></span><br/>
+			<div style="text-align:center;" wicket:id="attachmentsPanel"></div>	
+		</div>
+	</div>
+	<div id="content">
+		<div wicket:id="recyclesTable" style="margin:auto;"></div>
+	</div>
+</wicket:extend>
+</html>

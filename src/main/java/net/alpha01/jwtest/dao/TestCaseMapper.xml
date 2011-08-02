@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.TestCaseMapper">
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
+		select * from testcases where id = #{id}
+	</select>
+	
+	<select id="getStat" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
+		select t.*,(select count(success) from results where id_testcase=t.id and success=1) as success, (select count(success) from results where id_testcase=t.id) as nresults from testcases as t where t.id = #{id}
+	</select>
+	
+	<select id="getAll" parameterType ="net.alpha01.jwtest.dao.TestCaseMapper$TestCaseSelectSort" resultType="net.alpha01.jwtest.beans.TestCase">
+		select * from testcases where id_requirement = #{id_requirement}
+		<if test="sort!=null">
+			ORDER BY ${sort}
+			<if test="asc == false">
+				DESC
+			</if>
+		</if>
+	</select>
+	<select id="getAllStat" parameterType ="net.alpha01.jwtest.dao.TestCaseMapper$TestCaseSelectSort" resultType="net.alpha01.jwtest.beans.TestCase">
+		select t.*,(select count(success) from results where id_testcase=t.id and success=1)as success, (select count(*) from results where id_testcase=t.id) as nresults from testcases as t where t.id_requirement = #{id_requirement}
+		<if test="sort!=null">
+			ORDER BY ${sort}
+			<if test="asc == false">
+				DESC
+			</if>
+		</if>
+	</select>
+	
+	<select id="getAllUncheckedBySession" parameterType="int"  resultType="net.alpha01.jwtest.beans.TestCase">
+		select t.* from testcases as t 
+			inner join plans_testcases as pt on pt.id_testcase=t.id 
+			inner join sessions as s on s.id_plan=pt.id_plan 
+			left join results as r on r.id_testcase=t.id and r.id_session=s.id 
+			left join testcasesdependency as td on td.id_testcase=t.id
+			where s.id=#{id} and r.id is null 
+			order by t.id_requirement,td.id_dependency;
+	</select>
+	
+	<select id="getAllByProject" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
+		select t.* from testcases t inner join requirements r on r.id=t.id_requirement where r.id_project=#{id_project} order by t.name;
+	</select>
+	
+	<select id="getAllByPlan" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
+		select t.* from testcases t inner join plans_testcases as pt on pt.id_testcase=t.id and pt.id_plan=#{id};
+	</select>
+	
+	<insert id="add" flushCache="true" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.TestCase">
+		insert into testcases (id_requirement,name,description,expected_result) values (#{id_requirement},#{name},#{description},#{expected_result});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.TestCase">
+		update testcases set id_requirement=#{id_requirement},name=#{name},description=#{description},expected_result=#{expected_result} where id=#{id};
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.TestCase">
+		delete from testcases where id=#{id}
+	</delete>
+	
+	<select id="getDependencies" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
+		select t.* from testcases as t inner join testcasesdependency as td on t.id=td.id_dependency where td.id_testcase=#{id}
+	</select>
+	
+	<insert id="addDependency" parameterType="net.alpha01.jwtest.dao.TestCaseMapper$Dependency">
+		insert into testcasesdependency(id_testcase,id_dependency) values(#{idTestCase},#{idDependency});
+	</insert>
+	
+	<delete id="deleteDependencies" parameterType="int">
+		delete from testcasesdependency where id_testcase=#{id_testcase}
+	</delete>
+</mapper>

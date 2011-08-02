@@ -1,0 +1,37 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="topic">
+		<div id="menu">
+				<a wicket:id="addRequirementLnk"><img width="32px" height="32px" wicket:id="addRequirementImg" wicket:message="title:requirement.add"/></a>
+				<a wicket:id="addPlanLnk"><img width="32px" height="32px" wicket:id="addPlanImg" wicket:message="title:plan.add"/></a>
+				<a wicket:id="startSessionLnk"><img width="32px" height="32px" wicket:id="addSessionImg" wicket:message="title:session.start"/></a>
+				<hr/>
+			 	<a wicket:id="projectRolesLnk"><img width="32px" height="32px" wicket:id="rolesProjectImg" wicket:message="title:project.permission"/></a> 
+			 	<a wicket:id="updateProjectLnk"><img width="32px" height="32px" wicket:id="updateProjectImg" wicket:message="title:project.update"/></a> 
+				<a wicket:id="versionsProjectLnk"><img width="32px" height="32px" wicket:id="versionsProjectImg" wicket:message="title:project.versions"/></a> 
+				<a wicket:id="deleteProjectLnk"><img width="32px" height="32px" wicket:id="deleteRequirementImg" wicket:message="title:project.delete"/></a>
+				<hr/>
+				<a wicket:id="exportLnk"><img width="32px" height="32px" wicket:id="exportImg" wicket:message="title:export"/></a>
+				
+		</div>
+
+		<div id="title">
+			<span wicket:id="projectName"></span><br /> <a wicket:id="mantisLnk"
+				target="_blank">Mantis</a>
+		</div>
+		<div id="description">
+			<span wicket:id="projectDescription"></span>
+		</div>
+	</div>
+	<div id="content">
+		<div align="center" wicket:id="requirementsTable"></div>
+		<div style="text-align: center;" id="bottomButton">
+			<a wicket:id="reqGraphLnk">Show Dependency Graph</a>
+		</div>
+		<br />
+		<div align="center" wicket:id="plansTable"></div>
+	</div>
+
+</wicket:extend>
+</html>

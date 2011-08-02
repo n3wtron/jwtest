@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.ResultMapper">
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Result">
+		select * from results where id = #{id}
+	</select>
+	<select id="getAll" parameterType ="net.alpha01.jwtest.dao.ResultMapper$ResultSort" resultType="net.alpha01.jwtest.beans.Result">
+		select *,t.name testcaseName from results as r inner join testcases t on r.id_testcase=t.id where r.id_session = #{id_session}
+		<if test="sortColumn!=null">
+			ORDER BY r.${sortColumn}
+			<if test="asc==false">
+				DESC
+			</if>
+		</if>
+	</select>
+	<select id="getAllByTestCase" parameterType="int" resultType="net.alpha01.jwtest.beans.Result">
+		select r.* from results r inner join sessions s on s.id=r.id_session where id_testcase=#{id} order by s.end_date DESC; 
+	</select>
+	
+	<select id="getRecycles" parameterType="int" resultType="net.alpha01.jwtest.beans.Result">
+		select * from results where id_parent=#{id};
+	</select>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.Result">
+		insert into results (id_session,id_testcase,success,note
+		<if test="id_parent!=null">
+			,id_parent
+		</if>
+		) values (#{id_session},#{id_testcase},#{success},#{note}
+		<if test="id_parent!=null">
+			,#{id_parent}
+		</if>
+		);
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.Result">
+		update results set id_session=#{id_session},id_testcase=#{id_testcase},success=#{success},note=#{note}
+		<if test="recycles!=null">
+			,recycles=#{recycles}
+		</if>
+		 where id=#{id};
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Result">
+		delete from results where id=#{id}
+	</delete>
+	
+	<select id="getAllMantis" parameterType="net.alpha01.jwtest.beans.Result" resultType="net.alpha01.jwtest.beans.ResultMantis">
+		select * from results_mantis where id_result=#{id} 
+	</select>
+	
+	<insert id="addMantis" parameterType="net.alpha01.jwtest.beans.ResultMantis">
+		insert into results_mantis (id_result, id_mantis) values (#{id_result},#{id_mantis});
+	</insert>
+	
+	<delete id="delMantis" parameterType="net.alpha01.jwtest.beans.ResultMantis">
+		delete from results_mantis where id_result=#{id_result} and id_mantis=#{id_mantis};
+	</delete>
+	
+	
+</mapper>

@@ -1,0 +1,27 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="topic">
+		<div id="menu">
+			<a wicket:id="closeLnk"><img width="32px" height="32px" wicket:id="closeSessionImg" wicket:message="title:session.close"/></a>
+			<a wicket:id="reopenLnk"><img width="32px" height="32px" wicket:id="reopenSessionImg" wicket:message="title:session.reopen"/></a>
+			<a wicket:id="reportLnk"><img width="32px" height="32px" wicket:id="reportImg" wicket:message="title:report.generate"/></a>
+			<hr/>
+			<a wicket:id="startSessionLnk"><img width="32px" height="32px" wicket:id="addSessionImg" wicket:message="title:session.start"/></a>
+			<a wicket:id="delLnk"><img width="32px" height="32px" wicket:id="delSessionImg" wicket:message="title:session.delete"/></a>
+		</div>
+		<div id="title">
+			<wicket:message key="title" />
+		</div>
+		<div id="description" align="center">
+			<form wicket:id="selectSessionForm">
+				Session:<select wicket:id="sessionFld"></select>
+			</form>
+		</div>
+	</div>
+	<div id="content" align="center">
+		<div wicket:id="testcasesTable"></div><br/>
+		<div wicket:id="resultsTable"></div>
+	</div>
+</wicket:extend>
+</html>

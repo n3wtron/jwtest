@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.RequirementMapper">
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Requirement">
+		select * from requirements where id = #{id}
+	</select>
+	<select id="getAll" parameterType ="net.alpha01.jwtest.dao.RequirementMapper$RequirementSelectSort" resultType="net.alpha01.jwtest.beans.Requirement">
+		select r.*, (select count(*) from testcases where id_requirement=r.id) as ntest from requirements as r where r.id_project = #{id_project}
+		<if test="id_type!=null">
+			AND id_type=#{id_type}
+		</if>
+		<if test="name!=null">
+			AND name like '%${name}%'
+		</if>
+		<if test="description!=null">
+			AND description like '%${description}%'
+		</if>
+		<if test="num!=null">
+			AND num = #{num}
+		</if>
+		<if test="sort!=null">
+			ORDER BY ${sort}
+			<if test="asc == false">
+				DESC
+			</if>
+		</if>
+	</select>
+	
+	<select id="getTypes" resultType="net.alpha01.jwtest.beans.RequirementType">
+		select * from requirementstype order by name;
+	</select>
+	
+	<insert id="add" parameterType="net.alpha01.jwtest.beans.Requirement" useGeneratedKeys="true" keyProperty="id">
+		insert into requirements (id,id_project,id_type,num, name,description) values (#{id},#{id_project},#{id_type},#{num}, #{name},#{description});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.Requirement">
+		update requirements set id=#{id}, id_type=#{id_type}, num=#{num}, name=#{name}, description=#{description} where id_project=#{id_project} and id=#{oldId};
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Requirement">
+		delete from requirements where id=#{id};
+	</delete>
+	
+	<select id="getDependencies" parameterType="int" resultType="net.alpha01.jwtest.beans.Requirement">
+		select r.* from requirements as r inner join requirementsdependency as rd on r.id=rd.id_dependency where rd.id_requirement=#{id}
+	</select>
+	<select id="nextNum" resultType="int">
+		select (MAX(num)+1) from requirements where id_project=#{idProject} and id_type=#{idType};
+	</select>
+	
+	<insert id="addDependency" parameterType="net.alpha01.jwtest.dao.RequirementMapper$Dependency">
+		insert into requirementsdependency(id_requirement,id_dependency) values(#{idRequirement},#{idDependency});
+	</insert>
+	
+	<delete id="deleteDependencies" parameterType="int">
+		delete from requirementsdependency where id_requirement=#{id_requirement}
+	</delete>
+	
+	<select id="getType" parameterType="int" resultType="net.alpha01.jwtest.beans.RequirementType">
+		select * from requirementstype where id=#{id}
+	</select>
+	
+	
+</mapper>

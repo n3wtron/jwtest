@@ -1,0 +1,24 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="title">
+		<wicket:message key="title" />
+	</div>
+	<div id="addForm">
+		<table id="dataTable">
+			<tr>
+				<th><wicket:message key="user" /></th>
+				<th>Roles</th>
+				<th>Action</th>
+			</tr>
+			<tr wicket:id="userRoleRow">
+				<form wicket:id="userRoleForm">
+					<td><span wicket:id="userName"></span>(<span wicket:id="name"></span>)</td>
+					<td><select wicket:id="rolesFld"></select></td>
+					<td><input type="submit" wicket:message="value:update"/></td>
+				</form>
+			</tr>
+		</table>
+	</div>
+</wicket:extend>
+</html>

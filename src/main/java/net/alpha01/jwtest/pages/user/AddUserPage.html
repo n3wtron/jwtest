@@ -1,0 +1,54 @@
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<div id="title">
+		<wicket:message key="title" />
+	</div>
+	<div id="addform">
+		<form wicket:id="addForm">
+			<table>
+				<tr>
+					<td>Username</td>
+					<td><input type="text" wicket:id="usernameFld" />
+					</td>
+				</tr>
+				<tr>
+					<td>Name</td>
+					<td>
+						<input type="text" wicket:id="nameFld"/>
+					</td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td>
+						<input type="password" wicket:id="passwordFld"/>
+					</td>
+				</tr>
+				<tr>
+					<td>Email</td>
+					<td>
+						<input type="text" wicket:id="emailFld"/>
+					</td>
+				</tr>
+				<tr>
+					<td>Groups</td>
+					<td>
+						<select wicket:id="groupsFld"></select>
+					</td>
+				</tr>
+				<tr>
+					<td>LDAP</td>
+					<td>
+						<input type="checkbox" wicket:id="ldapFld"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="submit" wicket:message="value:add"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</wicket:extend>
+</html>

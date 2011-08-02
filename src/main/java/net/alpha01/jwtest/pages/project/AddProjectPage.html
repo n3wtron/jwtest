@@ -1,0 +1,40 @@
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+	<script type="text/javascript" src="js/nicEdit.js"></script>
+	<script type="text/javascript">
+	bkLib.onDomLoaded(nicEditors.allTextAreas);
+	</script>
+	<div id="title">
+		<wicket:message key="title" />
+	</div>
+	<div id="addForm">
+		<form wicket:id="addProjectForm">
+			<table>
+				<tr>
+					<td><wicket:message key="name" />:</td>
+					<td><input type="text" wicket:id="nameFld" />
+					</td>
+				</tr>
+
+				<tr>
+					<td>Mantis URL:</td>
+					<td><input type="text" wicket:id="mantisUrlFld" size="80" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><wicket:message key="description" />:
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><textarea rows="10" cols="80"
+							wicket:id="descriptionFld"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"
+						wicket:message="value:add" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</wicket:extend>
+</html>

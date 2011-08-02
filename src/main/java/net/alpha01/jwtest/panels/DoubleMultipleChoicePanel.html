@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+	<wicket:panel>
+		<form wicket:id="selForm">
+			<table id="dataTable" width="100%">
+				<tr>
+					<th><wicket:message key="avaiable"/></th>
+					<th></th>
+					<th><wicket:message key="selected"/></th>
+				</tr>
+				<tr>
+					<td width="45%"><div style="overflow: auto; width:500px;"><select size="15" wicket:id="leftSel"></select></div></td>
+					<td width="10%">
+						<input wicket:id="selBtn" type="button" wicket:message="value:sel" /><br/>
+						<input wicket:id="unSelBtn" type="button" wicket:message="value:unsel" />
+					</td>
+					<td width="45%"><div style="overflow: auto; width:500px;"><select size="15"  wicket:id="rightSel"></select></div></td>
+				</tr>
+			</table>
+		</form>
+	</wicket:panel>
+</body>
+</html>
