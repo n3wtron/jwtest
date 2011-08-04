@@ -1,0 +1,16 @@
+1) Additional Maven Repositories
+<repositories>
+                        <repository>
+                                <id>jboss</id>
+                                <name>Jboss nexus</name>
+                                <releases>
+                                        <enabled>true</enabled>
+                                </releases>
+                                <url>
+                                        http://repository.jboss.org/nexus/content/groups/public-jboss/
+                                </url>
+                        </repository>
+                </repositories>
+
+2) Jetty JAVAOPTS to run JWTEST
+-Djwtest.config=[path_jwtest_config.xml]
