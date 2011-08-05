@@ -14,3 +14,6 @@
 
 2) Jetty JAVAOPTS to run JWTEST
 -Djwtest.config=[path_jwtest_config.xml]
+
+3) Maven goal to run jwtest with jetty plugin
+jetty run (mvn jetty:run)

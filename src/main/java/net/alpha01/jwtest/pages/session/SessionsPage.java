@@ -6,11 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import net.alpha01.jwtest.beans.Profile;
 import net.alpha01.jwtest.beans.Session;
 import net.alpha01.jwtest.beans.TestCase;
 import net.alpha01.jwtest.component.AjaxLinkSecure;
 import net.alpha01.jwtest.component.BookmarkablePageLinkSecure;
+import net.alpha01.jwtest.component.HtmlLabel;
 import net.alpha01.jwtest.component.TmpFileDownloadModel;
+import net.alpha01.jwtest.dao.ProfileMapper;
 import net.alpha01.jwtest.dao.SessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
@@ -26,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.ContextImage;
@@ -56,6 +60,14 @@ public class SessionsPage extends LayoutPage {
 		if (currSession==null){
 			//load session from WebSession
 			currSession = getSession().getCurrentSession();
+		}
+		
+		//PROFILE
+		if (currSession!=null && currSession.getId_profile()!=null){
+			Profile profile = sesMapper.getSqlSession().getMapper(ProfileMapper.class).get(currSession.getId_profile());
+			add(new HtmlLabel("profileDescription",profile.getDescription()));
+		}else{
+			add(new Label("profileDescription"));
 		}
 
 		List<TestCase> testcases = null;

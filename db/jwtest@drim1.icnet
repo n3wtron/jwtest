@@ -1,0 +1,3 @@
+create table profiles (id int not null primary key auto_increment,id_project int, name varchar(255) unique, description text, constraint fk_profiles_projects foreign key (id_project) references projects(id) on delete set null on update cascade) type=INNODB;
+alter table sessions add column id_profile int;
+alter table sessions add constraint fk_sessions_profiles foreign key (id_profile) references profiles(id) on update cascade on delete set null;

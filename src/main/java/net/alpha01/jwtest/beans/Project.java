@@ -28,14 +28,6 @@ public class Project extends IdBean implements Serializable{
 		return name;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Project)){
-			return false;
-		}else{
-			return ((Project)obj).getId().equals(getId());
-		}
-	}
 	public void setDescription(String description) {
 		this.description = description;
 	}

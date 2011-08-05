@@ -24,5 +24,6 @@
 		<mapper resource="net/alpha01/jwtest/dao/UserMapper.xml" />
 		<mapper resource="net/alpha01/jwtest/dao/RoleMapper.xml" />
 		<mapper resource="net/alpha01/jwtest/dao/AttachmentMapper.xml" />
+		<mapper resource="net/alpha01/jwtest/dao/ProfileMapper.xml" />
 	</mappers>
 </configuration>

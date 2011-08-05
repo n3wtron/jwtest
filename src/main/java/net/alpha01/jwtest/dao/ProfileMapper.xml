@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.alpha01.jwtest.dao.ProfileMapper">
+	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Profile">
+		select * from profiles where id = #{id}
+	</select>
+	
+	<select id="getAll" parameterType ="int" resultType="net.alpha01.jwtest.beans.Profile">
+		select * from profiles ORDER BY name
+	</select>
+	
+	<select id="getAllByProject" parameterType ="int" resultType="net.alpha01.jwtest.beans.Profile">
+		select * from profiles where id_project = #{id} or id_project is null  ORDER BY name
+	</select>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.Profile">
+		insert into profiles (id_project,name,description) values (#{id_project},#{name},#{description});
+	</insert>
+	
+	<update id="update" parameterType="net.alpha01.jwtest.beans.Profile">
+		update profiles set name=#{name},description=#{description},id_project=#{id_project} where id=#{id};
+	</update>
+	
+	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Profile">
+		delete from profiles where id=#{id}
+	</delete>
+</mapper>

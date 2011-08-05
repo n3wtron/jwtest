@@ -15,6 +15,7 @@ public class Session extends IdBean implements Serializable {
 	
 	private BigInteger id_plan;
 	private BigInteger id_user;
+	private BigInteger id_profile;
 	private String version;
 	private Date start_date;
 	private Date end_date;
@@ -81,5 +82,11 @@ public class Session extends IdBean implements Serializable {
 	}
 	public void setVersion(String version) {
 		this.version = version;
+	}
+	public BigInteger getId_profile() {
+		return id_profile;
+	}
+	public void setId_profile(BigInteger id_profile) {
+		this.id_profile = id_profile;
 	}
 }

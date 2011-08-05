@@ -22,7 +22,7 @@
 	</select>
 	
 	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.Session">
-		insert into sessions (id_plan,id_user,version,start_date,end_date) values (#{id_plan},#{id_user},#{version},#{start_date},#{end_date});
+		insert into sessions (id_plan,id_user,version,id_profile,start_date,end_date) values (#{id_plan},#{id_user},#{version},#{id_profile},#{start_date},#{end_date});
 	</insert>
 	
 	<update id="update" parameterType="net.alpha01.jwtest.beans.Session">

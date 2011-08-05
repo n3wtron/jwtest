@@ -1,6 +1,7 @@
 package net.alpha01.jwtest.panels;
 
 import net.alpha01.jwtest.component.BookmarkablePageLinkSecure;
+import net.alpha01.jwtest.pages.profiles.ProfilesPage;
 import net.alpha01.jwtest.pages.project.AddProjectPage;
 import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.pages.session.SessionsPage;
@@ -20,6 +21,7 @@ public class MainMenuPanel extends Panel{
 		add(new BookmarkablePageLinkSecure<String>("addProjectLnk",AddProjectPage.class,Roles.ADMIN).add(new ContextImage("addProjectImg", "images/add_folder.png")));
 		add(new BookmarkablePageLinkSecure<String>("sessionsLnk",SessionsPage.class,Roles.ADMIN,"PROJECT_ADMIN","MANAGER","TESTER").add(new ContextImage("sessionsImg", "images/session.png")));		
 		add(new BookmarkablePageLinkSecure<String>("usersLnk",UsersPage.class,Roles.ADMIN).add(new ContextImage("usersImg", "images/users.png")));
+		add(new BookmarkablePageLinkSecure<String>("profilesLnk",ProfilesPage.class,Roles.ADMIN,"PROJECT_ADMIN").add(new ContextImage("profilesImg", "images/profiles.png")));
 	}
 
 }
