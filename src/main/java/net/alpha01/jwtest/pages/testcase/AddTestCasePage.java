@@ -49,7 +49,7 @@ public class AddTestCasePage extends LayoutPage {
 		add(requirementLnk);
 		testCase.setId_requirement(req.getId());
 		Form<TestCase> addForm = new Form<TestCase>("addForm");
-		addForm.add(new TextField<String>("nameFld", new PropertyModel<String>(testCase, "name")));
+		addForm.add(new TextField<String>("nameFld", new PropertyModel<String>(testCase, "name")).setRequired(true));
 		addForm.add(new TextArea<String>("descriptionFld", new PropertyModel<String>(testCase, "description")));
 		addForm.add(new TextArea<String>("expectedResultFld", new PropertyModel<String>(testCase, "expected_result")));
 		
