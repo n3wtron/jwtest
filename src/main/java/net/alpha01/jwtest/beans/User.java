@@ -65,6 +65,12 @@ public class User extends IdBean implements Serializable {
 	}
 
 	public Boolean getLdap() {
+		/**
+		 * prevent exception if you use getLdap() in conditional statement 
+		 */
+		if (ldap==null) {
+			return new Boolean(false);
+		}
 		return ldap;
 	}
 
