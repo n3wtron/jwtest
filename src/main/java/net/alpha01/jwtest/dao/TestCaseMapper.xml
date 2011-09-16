@@ -10,7 +10,7 @@
 	</select>
 	
 	<select id="getAll" parameterType ="net.alpha01.jwtest.dao.TestCaseMapper$TestCaseSelectSort" resultType="net.alpha01.jwtest.beans.TestCase">
-		select * from testcases where id_requirement = #{id_requirement}
+		select t.* from testcases as t where id_requirement = #{id_requirement} and version = (select MAX(version) from testcases where id=t.id)
 		<if test="sort!=null">
 			ORDER BY ${sort}
 			<if test="asc == false">
@@ -19,7 +19,7 @@
 		</if>
 	</select>
 	<select id="getAllStat" parameterType ="net.alpha01.jwtest.dao.TestCaseMapper$TestCaseSelectSort" resultType="net.alpha01.jwtest.beans.TestCase">
-		select t.*,(select count(success) from results where id_testcase=t.id and success=1)as success, (select count(*) from results where id_testcase=t.id) as nresults from testcases as t where t.id_requirement = #{id_requirement}
+		select t.*,(select count(success) from results where id_testcase=t.id and testcase_version=t.version and success=1)as success, (select count(*) from results where id_testcase=t.id and testcase_version=t.version) as nresults from testcases as t where t.id_requirement = #{id_requirement} AND t.version = (select MAX(version) from testcases where id=t.id)
 		<if test="sort!=null">
 			ORDER BY ${sort}
 			<if test="asc == false">
@@ -39,11 +39,11 @@
 	</select>
 	
 	<select id="getAllByProject" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
-		select t.* from testcases t inner join requirements r on r.id=t.id_requirement where r.id_project=#{id_project} order by t.name;
+		select t.* from testcases t inner join requirements r on r.id=t.id_requirement where r.id_project=#{id_project} and t.version = (select MAX(version) from testcases where id=t.id) order by t.name;
 	</select>
 	
 	<select id="getAllByPlan" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
-		select t.* from testcases t inner join plans_testcases as pt on pt.id_testcase=t.id and pt.id_plan=#{id};
+		select t.* from testcases t inner join plans_testcases as pt on pt.id_testcase=t.id and pt.id_plan=#{id} and t.version = (select MAX(version) from testcases where id=t.id);
 	</select>
 	
 	<insert id="add" flushCache="true" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.TestCase">

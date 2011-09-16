@@ -10,6 +10,7 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 
 public class TestCase extends IdBean implements Serializable {
 	private static final long serialVersionUID = -4393350179491773029L;
+	private BigInteger version;
 	private BigInteger id_requirement;
 	private String name;
 	private String description;
@@ -30,6 +31,14 @@ public class TestCase extends IdBean implements Serializable {
 		this.id_requirement = id_requirement;
 		this.name = name;
 		this.description = description;
+	}
+
+	public BigInteger getVersion() {
+		return version;
+	}
+
+	public void setVersion(BigInteger version) {
+		this.version = version;
 	}
 
 	public String getName() {

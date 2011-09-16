@@ -14,6 +14,7 @@ public class Result extends IdBean implements Serializable {
 	private BigInteger id_parent;
 	private BigInteger id_session;
 	private BigInteger id_testcase;
+	private BigInteger testcase_version;
 	private Boolean success;
 	private Date insert_date;
 	private String note;
@@ -32,6 +33,12 @@ public class Result extends IdBean implements Serializable {
 	}
 	public void setId_testcase(BigInteger id_testcase) {
 		this.id_testcase = id_testcase;
+	}
+	public BigInteger getTestcase_version() {
+		return testcase_version;
+	}
+	public void setTestcase_version(BigInteger testcase_version) {
+		this.testcase_version = testcase_version;
 	}
 	public Boolean getSuccess() {
 		return success;
