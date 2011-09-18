@@ -2,20 +2,19 @@ package net.alpha01.jwtest.pages.testcase;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.alpha01.jwtest.beans.TestCase;
-import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
+import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
-import net.alpha01.jwtest.dao.TestCaseMapper.Dependency;
 import net.alpha01.jwtest.dao.TestCaseMapper.TestCaseSelectSort;
+import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.panels.attachment.AddAttachmentPanel;
+import net.alpha01.jwtest.util.TestCaseUtil;
 
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -51,27 +50,11 @@ public class UpdateTestCasePage extends LayoutPage {
 
 			@Override
 			protected void onSubmit() {
-				SqlSessionMapper<TestCaseMapper> sesMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
-				try {
-					if (sesMapper.getMapper().update(testCase).equals(1)) {
-						info("TestCase updated");
-						sesMapper.getMapper().deleteDependencies(testCase.getId());
-						Iterator<TestCase> itd = dependencies.iterator();
-						while (itd.hasNext()){
-							TestCase dep=itd.next();
-							sesMapper.getMapper().addDependency(new Dependency(testCase.getId(), dep.getId()));
-						}
-						sesMapper.commit();
-						sesMapper.close();
-						setResponsePage(TestCasePage.class, params);
-					} else {
-						sesMapper.rollback();
-						sesMapper.close();
-						error("ERROR: TestCase not added");
-					}
-				} catch (PersistenceException e) {
-					e.printStackTrace();
-					error("ERROR: TestCase chiave duplicata");
+				try{
+					TestCaseUtil.updateTestCase(testCase,dependencies);
+					setResponsePage(TestCasePage.class, new PageParameters("idTest="+testCase.getId().toString()));
+				}catch (JWTestException e){
+					error(e.getMessage());
 				}
 			}
 		};
