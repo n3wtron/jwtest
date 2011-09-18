@@ -9,6 +9,8 @@ import ooo.connector.BootstrapSocketConnector;
 
 import com.sun.star.beans.PropertyValue;
 import com.sun.star.comp.helper.BootstrapException;
+import com.sun.star.container.XIndexAccess;
+import com.sun.star.container.XNameAccess;
 import com.sun.star.frame.XComponentLoader;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XModel;
@@ -49,23 +51,7 @@ public class RequirementODSExporter {
 			tmpFile = File.createTempFile("jwtest_export_requirement", ".ods");
 			
 			tmpFile.deleteOnExit();
-			Project prj = ((JWTestSession)JWTestSession.get()).getCurrentProject();
-			SqlSessionMapper<RequirementMapper> sesMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
-			Iterator<Requirement> itr = sesMapper.getMapper().getAll(new RequirementSelectSort(prj.getId(), "num", true)).iterator();
-			sesMapper.close();
-			XComponent xComponent=createXComponent();
-			XSpreadsheet xSpreadsheet=getSpreadSheet(xComponent);
-			
-			int y=10;
-		
-			while (itr.hasNext()){
-				Requirement req = itr.next();
-				xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType().toString());
-				xSpreadsheet.getCellByPosition(2, y).setFormula(req.getNum().toString());
-				xSpreadsheet.getCellByPosition(5, y).setFormula(req.getName());
-				xSpreadsheet.getCellByPosition(6, y++).setFormula(req.getDescription());
-			}
-			
+			XComponent xComponent=exportToXComponent();
 			storeDocComponent(xComponent, "file://"+tmpFile.getAbsolutePath());
 			closeDocComponent(xComponent);
 			return tmpFile;
@@ -79,7 +65,32 @@ public class RequirementODSExporter {
 			throw new JWTestException(RequirementODSExporter.class,e);
 		}
 	}
+	/**
+	 * 
+	 * @return
+	 * @throws JWTestException
+	 * @throws Exception 
+	 * @throws BootstrapException 
+	 */
+	public static XComponent exportToXComponent() throws JWTestException, BootstrapException, Exception{
+		Project prj = ((JWTestSession)JWTestSession.get()).getCurrentProject();
+		SqlSessionMapper<RequirementMapper> sesMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
+		Iterator<Requirement> itr = sesMapper.getMapper().getAll(new RequirementSelectSort(prj.getId(), "num", true)).iterator();
+		sesMapper.close();
+		XComponent xComponent=createXComponent();
+		XSpreadsheet xSpreadsheet=getSpreadSheet(xComponent);
+		
+		int y=10;
 	
+		while (itr.hasNext()){
+			Requirement req = itr.next();
+			xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType().toString());
+			xSpreadsheet.getCellByPosition(2, y).setFormula(req.getNum().toString());
+			xSpreadsheet.getCellByPosition(5, y).setFormula(req.getName());
+			xSpreadsheet.getCellByPosition(6, y++).setFormula(req.getDescription());
+		}
+		return xComponent;
+	}
 	
 	/**
 	 * 
@@ -87,7 +98,7 @@ public class RequirementODSExporter {
 	 * @throws BootstrapException
 	 * @throws Exception
 	 */
-	private static XComponent createXComponent() throws BootstrapException, Exception{
+	public static XComponent createXComponent() throws BootstrapException, Exception{
 		String oooExeFolder="/usr/lib/libreoffice/program/";
 		XComponentContext context = BootstrapSocketConnector.bootstrap(oooExeFolder);
 		System.out.println("Trying to connect to OOo service... ");
@@ -117,11 +128,10 @@ public class RequirementODSExporter {
 	 * @throws BootstrapException
 	 * @throws Exception
 	 */
-	private static XSpreadsheet getSpreadSheet(XComponent xComponent) throws BootstrapException, Exception{
-			
+	public static XSpreadsheet getSpreadSheet(XComponent xComponent) throws BootstrapException, Exception{
+	
 			XSpreadsheetDocument xSpreadsheetDocument=UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComponent);
 			
-
 			XModel model = (XModel) UnoRuntime.queryInterface(XModel.class, xSpreadsheetDocument);
 			XController controller = model.getCurrentController();
 		    XSpreadsheetView view = (XSpreadsheetView) UnoRuntime.queryInterface(XSpreadsheetView.class, controller);
@@ -130,13 +140,24 @@ public class RequirementODSExporter {
 		   
 	}
 	
+	public static XSpreadsheet getSpreadSheet(XComponent xComponent, String name) throws BootstrapException, Exception{
+		
+		XSpreadsheetDocument xSpreadsheetDocument=UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComponent);
+		
+	  Object sheetObj = xSpreadsheetDocument.getSheets().getByName(name); 
+      return (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, sheetObj);
+	
+	   
+}
+	
+	
 	/**
 	 * 
 	 * @param xDoc
 	 * @param storeUrl
 	 * @throws java.lang.Exception
 	 */
-	 private static  void storeDocComponent(XComponent xDoc, String storeUrl) throws java.lang.Exception {
+	 public static  void storeDocComponent(XComponent xDoc, String storeUrl) throws java.lang.Exception {
 	 
 	     XStorable xStorable = (XStorable)UnoRuntime.queryInterface(XStorable.class, xDoc);
 	     PropertyValue[] storeProps = new PropertyValue[1];
@@ -150,7 +171,7 @@ public class RequirementODSExporter {
 	  * @param xDoc
 	  * @throws SQLException
 	  */
-	 private static  void closeDocComponent(XComponent xDoc) throws SQLException{
+	 public static  void closeDocComponent(XComponent xDoc) throws SQLException{
 		 XCloseable xCloseable = (XCloseable)UnoRuntime.queryInterface(XCloseable.class, xDoc);
 		 if (xCloseable!=null){
 			 xCloseable.close();

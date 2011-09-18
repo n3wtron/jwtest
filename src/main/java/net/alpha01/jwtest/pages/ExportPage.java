@@ -17,6 +17,7 @@ import net.alpha01.jwtest.exports.RequirementCSVExporter;
 import net.alpha01.jwtest.exports.RequirementODSExporter;
 import net.alpha01.jwtest.exports.ResultCSVExporter;
 import net.alpha01.jwtest.exports.TestCaseCSVExporter;
+import net.alpha01.jwtest.exports.TestCaseODSExporter;
 
 import org.apache.log4j.Logger;
 import org.apache.wicket.RequestCycle;
@@ -54,7 +55,7 @@ public class ExportPage extends LayoutPage {
 			@Override
 			protected File getFile() {
 				try {
-					return TestCaseCSVExporter.exportToCSV();
+					return TestCaseODSExporter.exportToODS();
 				} catch (JWTestException e) {
 					return null;
 				}
