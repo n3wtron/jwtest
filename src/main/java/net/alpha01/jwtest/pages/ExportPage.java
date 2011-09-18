@@ -14,6 +14,7 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.exports.PlanCSVExporter;
 import net.alpha01.jwtest.exports.RequirementCSVExporter;
+import net.alpha01.jwtest.exports.RequirementODSExporter;
 import net.alpha01.jwtest.exports.ResultCSVExporter;
 import net.alpha01.jwtest.exports.TestCaseCSVExporter;
 
@@ -39,7 +40,7 @@ public class ExportPage extends LayoutPage {
 			@Override
 			protected File getFile() {
 				try {
-					return RequirementCSVExporter.exportToCSV();
+					return RequirementODSExporter.exportToODS();
 				} catch (JWTestException e) {
 					return null;
 				}
