@@ -1,8 +1,3 @@
-drop database jwtest;
-create database jwtest character set = utf8;
-
-use jwtest; 
-
 create table roles (id int primary key auto_increment, name varchar(255) unique)TYPE=INNODB;
 
 create table users (id int primary key auto_increment, username varchar(255) not null unique, password varchar(255), email varchar(255),name varchar(255),ldap bool default 0)TYPE=INNODB;
@@ -27,7 +22,7 @@ create table plans (id int primary key auto_increment, id_project int not null, 
 
 create table plans_testcases (id_plan int not null, id_testcase int not null, primary key(id_plan, id_testcase), constraint fk_plans_testcases_plans foreign key (id_plan) references plans(id) on delete cascade on update cascade, constraint fk_plans_testcases_testcase foreign key(id_testcase) references testcases(id) on delete cascade on update cascade) TYPE=INNODB;
 
-create table profiles (id int not null primary key auto_increment, name varchar(255) unique, description text) type=INNODB;
+create table profiles (id int not null primary key auto_increment,id_project int not null, name varchar(255) unique, description text, constraint fk_profiles_projects foreign key(id_project) references projects(id) on delete cascade) type=INNODB;
 
 create table sessions (id int primary key auto_increment, id_plan int not null,id_user int,id_profile int ,version varchar(255), start_date timestamp not null default CURRENT_TIMESTAMP, end_date timestamp, constraint fk_sessions_plans foreign key(id_plan) references plans(id) on delete cascade on update cascade, constraint fk_sessions_users foreign key(id_user) references users(id) on update cascade on delete set null, constraint fk_sessions_profiles foreign key (id_profile) references profiles(id) on update cascade on delete set null) TYPE=INNODB;
 
