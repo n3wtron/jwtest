@@ -7,9 +7,11 @@ import net.alpha01.jwtest.beans.TestCase;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.TestCaseMapper;
+import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.pages.requirement.RequirementPage;
+import net.alpha01.jwtest.util.TestCaseUtil;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.authorization.strategies.role.Roles;
@@ -35,18 +37,13 @@ public class DeleteTestCasePage extends LayoutPage {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void onSubmit() {
-				 SqlSessionMapper<TestCaseMapper> sesDelTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
-				if (sesDelTestMapper.getMapper().delete(test).equals(1)){
-					info("Testcase deleted");
-					sesDelTestMapper.commit();
-					sesDelTestMapper.close();
-					PageParameters reqParams=new PageParameters();
+				try {
+					TestCaseUtil.deleteTestCase(test);
+					PageParameters reqParams = new PageParameters();
 					reqParams.put("idReq", test.getId_requirement());
-					setResponsePage(RequirementPage.class,reqParams);
-				}else{
-					sesDelTestMapper.rollback();
-					sesDelTestMapper.close();
-					error("ERROR: Testcase not deleted SQL ERROR");
+					setResponsePage(RequirementPage.class, reqParams);
+				} catch (JWTestException e) {
+					error(e.getMessage());
 				}
 			}
 		});

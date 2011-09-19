@@ -24,20 +24,20 @@ import org.apache.log4j.Logger;
 
 public class TestCaseUtil {
 
-	
-	public static boolean isUsedTestCase(TestCase testCase){
+	public static boolean isUsedTestCase(TestCase testCase) {
 		SqlSessionMapper<TestCaseMapper> sesMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
 		// Check if there is any result with this testcase
 		List<Result> tres = sesMapper.getSqlSession().getMapper(ResultMapper.class).getAllByTestCase(testCase.getId());
 		sesMapper.close();
-		return tres.size()>0;
+		return tres.size() > 0;
 	}
-	
+
 	public static HashMap<BigInteger, BigInteger> updateTestCase(TestCase testCase, List<TestCase> dependencies) throws JWTestException {
 		SqlSessionMapper<TestCaseMapper> sesMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
 		if (!isUsedTestCase(testCase)) {
-			//there isn't any result associated to this testcase, so it's not necessary create a new testcase version
-			try{
+			// there isn't any result associated to this testcase, so it's not
+			// necessary create a new testcase version
+			try {
 				if (sesMapper.getMapper().update(testCase).equals(1)) {
 					Logger.getLogger(TestCaseUtil.class).info("TestCase updated");
 					sesMapper.getMapper().deleteDependencies(testCase.getId());
@@ -48,7 +48,7 @@ public class TestCaseUtil {
 					}
 					sesMapper.commit();
 					sesMapper.close();
-				}else{
+				} else {
 					sesMapper.rollback();
 					sesMapper.close();
 					throw new JWTestException(TestCaseUtil.class, "ERROR: TestCase not updated");
@@ -58,8 +58,9 @@ public class TestCaseUtil {
 			}
 			return null;
 		} else {
-			HashMap<BigInteger, BigInteger> stepsId=new HashMap<BigInteger, BigInteger>();
-			//There is some result associated to this testCase, so i have to create a new testcase version
+			HashMap<BigInteger, BigInteger> stepsId = new HashMap<BigInteger, BigInteger>();
+			// There is some result associated to this testCase, so i have to
+			// create a new testcase version
 			try {
 				StepMapper stepMapper = sesMapper.getSqlSession().getMapper(StepMapper.class);
 				AttachmentMapper attachMapper = sesMapper.getSqlSession().getMapper(AttachmentMapper.class);
@@ -74,7 +75,7 @@ public class TestCaseUtil {
 					if (sesMapper.getMapper().update(origTestCase).equals(1)) {
 						// cloning steps to new testCase
 						for (Step ts : tsteps) {
-							BigInteger origId=ts.getId();
+							BigInteger origId = ts.getId();
 							ts.setId_testcase(testCase.getId());
 							ts.setId(null);
 							if (!stepMapper.add(ts).equals(1)) {
@@ -113,6 +114,32 @@ public class TestCaseUtil {
 				}
 			} catch (PersistenceException e) {
 				throw new JWTestException(TestCaseUtil.class, "ERROR: TestCase chiave duplicata");
+			}
+		}
+	}
+
+	public static void deleteTestCase(TestCase testCase) throws JWTestException {
+		SqlSessionMapper<TestCaseMapper> sesDelTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
+		if (isUsedTestCase(testCase)) {
+			testCase.setNew_version(BigInteger.valueOf(-1));
+			if (sesDelTestMapper.getMapper().update(testCase).equals(1)) {
+				Logger.getLogger(TestCaseUtil.class).info("Testcase update to -1");
+				sesDelTestMapper.commit();
+				sesDelTestMapper.close();
+			} else {
+				sesDelTestMapper.rollback();
+				sesDelTestMapper.close();
+				throw new JWTestException(TestCaseUtil.class, "ERROR: Testcase not updated to -1 SQL ERROR");
+			}
+		} else {
+			if (sesDelTestMapper.getMapper().delete(testCase).equals(1)) {
+				Logger.getLogger(TestCaseUtil.class).info("Testcase deleted");
+				sesDelTestMapper.commit();
+				sesDelTestMapper.close();
+			} else {
+				sesDelTestMapper.rollback();
+				sesDelTestMapper.close();
+				throw new JWTestException(TestCaseUtil.class, "ERROR: Testcase not deleted SQL ERROR");
 			}
 		}
 	}
