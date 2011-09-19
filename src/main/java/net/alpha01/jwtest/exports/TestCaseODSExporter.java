@@ -30,7 +30,7 @@ public class TestCaseODSExporter {
 	public static File exportToODS() throws JWTestException{
 		File tmpFile;
 		try {
-			tmpFile = File.createTempFile("jwtest_export_testcase", ".csv");
+			tmpFile = File.createTempFile("jwtest_export_testcase", ".ods");
 			Logger.getLogger(TestCaseODSExporter.class).debug("Exporting TestCase on tmpFile:"+tmpFile.getAbsolutePath());
 			tmpFile.deleteOnExit();
 			Project prj = ((JWTestSession)JWTestSession.get()).getCurrentProject();

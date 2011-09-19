@@ -175,6 +175,8 @@ public class RequirementODSExporter {
 		 XCloseable xCloseable = (XCloseable)UnoRuntime.queryInterface(XCloseable.class, xDoc);
 		 if (xCloseable!=null){
 			 xCloseable.close();
+		 }else{
+			 xDoc.dispose();
 		 }
 	 }
 }
