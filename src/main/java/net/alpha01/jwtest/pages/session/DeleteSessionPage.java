@@ -8,6 +8,7 @@ import net.alpha01.jwtest.dao.SessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.pages.LayoutPage;
+import net.alpha01.jwtest.util.JWTestUtil;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.authorization.strategies.role.Roles;
@@ -39,6 +40,7 @@ public class DeleteSessionPage extends LayoutPage {
 					mapper.commit();
 					mapper.close();
 					DeleteSessionPage.this.getSession().setCurrentSession(null);
+					JWTestUtil.cleanDeadElements();
 					setResponsePage(SessionsPage.class);
 				}else{
 					mapper.rollback();

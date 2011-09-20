@@ -69,4 +69,8 @@
 	<delete id="deleteDependencies" parameterType="int">
 		delete from testcasesdependency where id_testcase=#{id_testcase}
 	</delete>
+	
+	<delete id="cleanTestCase">
+		delete from testcases where new_version!=0 and (id not in (select id_testcase from results) and id not in (select id_testcase from plans_testcases))
+	</delete>
 </mapper>

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import net.alpha01.jwtest.beans.Plan;
 import net.alpha01.jwtest.beans.Profile;
 import net.alpha01.jwtest.beans.Session;
 import net.alpha01.jwtest.beans.TestCase;
@@ -13,6 +14,7 @@ import net.alpha01.jwtest.component.AjaxLinkSecure;
 import net.alpha01.jwtest.component.BookmarkablePageLinkSecure;
 import net.alpha01.jwtest.component.HtmlLabel;
 import net.alpha01.jwtest.component.TmpFileDownloadModel;
+import net.alpha01.jwtest.dao.PlanMapper;
 import net.alpha01.jwtest.dao.ProfileMapper;
 import net.alpha01.jwtest.dao.SessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
@@ -20,6 +22,7 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
 import net.alpha01.jwtest.pages.HomePage;
 import net.alpha01.jwtest.pages.LayoutPage;
+import net.alpha01.jwtest.pages.plan.PlanPage;
 import net.alpha01.jwtest.panels.result.ResultsTablePanel;
 import net.alpha01.jwtest.panels.testcase.TestCasesTablePanel;
 import net.alpha01.jwtest.reports.SessionReport;
@@ -35,6 +38,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.DownloadLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -69,7 +73,24 @@ public class SessionsPage extends LayoutPage {
 		}else{
 			add(new Label("profileDescription"));
 		}
-
+		
+		if (currSession!=null && currSession.getId_profile()!=null){
+			//PLAN LNK
+			BookmarkablePageLink<String> planLnk=new BookmarkablePageLink<String>("planLnk", PlanPage.class,new PageParameters("idPlan="+currSession.getId_plan()));
+			Plan plan = sesMapper.getSqlSession().getMapper(PlanMapper.class).get(currSession.getId_plan());
+			planLnk.add(new Label("planName",plan.getName()));
+			add(planLnk);
+		}else{
+			Link<Void> planLnk=new Link<Void>("planLnk"){
+				private static final long serialVersionUID = 1L;
+				@Override
+				public void onClick() {	
+				}
+			};
+			planLnk.add(new Label("planName"));
+			add(planLnk);
+		}
+		
 		List<TestCase> testcases = null;
 		if (currSession == null) {
 			add(new EmptyPanel("testcasesTable"));

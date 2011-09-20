@@ -81,4 +81,5 @@ public interface TestCaseMapper {
 	List<TestCase> getAllByProject(BigInteger id);
 	List<TestCase> getAllUncheckedBySession(BigInteger idSession);
 	List<TestCase> getAllByPlan(BigInteger bigInteger);
+	Integer cleanTestCase();
 }

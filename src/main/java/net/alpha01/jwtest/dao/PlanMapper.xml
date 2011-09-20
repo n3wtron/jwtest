@@ -4,20 +4,22 @@
 	<select id="get" parameterType="int" resultType="net.alpha01.jwtest.beans.Plan">
 		select * from plans where id = #{id}
 	</select>
+	
 	<select id="getAll" parameterType ="int" resultType="net.alpha01.jwtest.beans.Plan">
-		select * from plans where id_project = #{id_project}
+		select * from plans where id_project = #{id_project} and new_version=0;
 	</select>
+	
 	<select id="getAllStat" parameterType ="int" resultType="net.alpha01.jwtest.beans.Plan">
 		select p.*,(select count(id) from sessions where id_plan=p.id) as nSessions, 
-		(select count(id) from testcases as t inner join plans_testcases as pt on pt.id_testcase=t.id where pt.id_plan=p.id) as nTests from plans as p  where p.id_project = #{id_project} order by id desc
+		(select count(id) from testcases as t inner join plans_testcases as pt on pt.id_testcase=t.id where pt.id_plan=p.id) as nTests from plans as p  where p.id_project = #{id_project} and p.new_version=0 order by id desc
 	</select>
 	
 	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.Plan">
-		insert into plans (id_project,name,creation_date) values (#{id_project},#{name},#{creation_date});
+		insert into plans (id_project,new_version,name,creation_date) values (#{id_project},#{new_version},#{name},#{creation_date});
 	</insert>
 	
 	<update id="update" parameterType="net.alpha01.jwtest.beans.Plan" flushCache="true">
-		update plans set id_project=#{id_project},name=#{name} where id=#{id}
+		update plans set id_project=#{id_project},new_version=#{new_version,name=#{name} where id=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Plan">
@@ -31,4 +33,9 @@
 	<delete id="deleteTestCase" parameterType="int" flushCache="true">
 		delete from plans_testcases where id_plan=#{id_plan}
 	</delete>
+	
+	<delete id="cleanPlan">
+		delete from plans where new_version!=0 and id not in (select id_plan from sessions); 
+	</delete>
+	
 </mapper>

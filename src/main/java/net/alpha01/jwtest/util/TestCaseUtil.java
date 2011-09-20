@@ -142,5 +142,13 @@ public class TestCaseUtil {
 				throw new JWTestException(TestCaseUtil.class, "ERROR: Testcase not deleted SQL ERROR");
 			}
 		}
+		JWTestUtil.cleanDeadElements();
+	}
+	
+	public static void cleanTestCase(){
+		SqlSessionMapper<TestCaseMapper> sesDelTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
+		sesDelTestMapper.getMapper().cleanTestCase();
+		sesDelTestMapper.commit();
+		sesDelTestMapper.close();
 	}
 }

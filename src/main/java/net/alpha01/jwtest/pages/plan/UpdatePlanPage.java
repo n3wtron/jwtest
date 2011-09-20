@@ -11,18 +11,18 @@ import net.alpha01.jwtest.beans.Plan;
 import net.alpha01.jwtest.beans.Requirement;
 import net.alpha01.jwtest.beans.TestCase;
 import net.alpha01.jwtest.dao.PlanMapper;
-import net.alpha01.jwtest.dao.PlanMapper.FK;
 import net.alpha01.jwtest.dao.RequirementMapper;
 import net.alpha01.jwtest.dao.RequirementMapper.RequirementSelectSort;
 import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper.TestCaseSelectSort;
+import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.panels.DoubleMultipleChoicePanel;
+import net.alpha01.jwtest.util.PlanUtil;
 
-import org.apache.log4j.Logger;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -71,29 +71,11 @@ public class UpdatePlanPage extends LayoutPage{
 						testCasesSet.add(tc);
 					}
 				}
-				
-				if (sesPlanMapper.getMapper().update(plan).equals(1)){
-					Integer testsDeleted = sesPlanMapper.getMapper().deleteTestCase(plan.getId());
-					Logger.getLogger(getClass()).debug("TestCases deleted:"+testsDeleted);
-					
-					Iterator<TestCase> itt = testCasesSet.iterator();
-					boolean sqlOk=true;
-					while (itt.hasNext() && sqlOk){
-						TestCase test=itt.next();
-						Logger.getLogger(getClass()).debug("adding testcase:"+test);
-						if (!sesPlanMapper.getMapper().addTestCase(new FK(plan.getId(), test.getId())).equals(1)){
-							error("Failed adding testcases association");
-							sqlOk=false;
-						}
-					}
-					if (sqlOk){
-						sesPlanMapper.commit();
-						setResponsePage(PlanPage.class,params);
-					}else{
-						sesPlanMapper.rollback();
-					}
-				}else{
-					sesPlanMapper.rollback();
+				try {
+					PlanUtil.updatePlan(plan, testCasesSet);
+					setResponsePage(PlanPage.class,new PageParameters("idPlan="+plan.getId().toString()));
+				} catch (JWTestException e) {
+					error(e.getMessage());
 				}
 				sesPlanMapper.close();
 			}
