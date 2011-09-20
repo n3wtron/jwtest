@@ -14,7 +14,7 @@ create table requirementstype (id int primary key auto_increment, name varchar(2
 
 create table requirements (id int primary key auto_increment, id_project int not null, id_type int, num int not null, name varchar(255),description text, unique(id_project,id_type,num), constraint fk_requirements_projects foreign key (id_project) references projects(id) on delete cascade on update cascade, constraint fk_requirements_requirementstype foreign key(id_type) references requirementstype(id) on delete cascade on update cascade) TYPE=INNODB;
 
-create table testcases(id int primary key auto_increment, id_requirement int not null, name varchar(255), description text, expected_result text, constraint fk_testcases_requirements foreign key(id_requirement) references requirements(id) on delete cascade on update cascade) TYPE=INNODB;
+create table testcases(id int primary key auto_increment, id_requirement int not null,new_version int default 0, name varchar(255), description text, expected_result text, constraint fk_testcases_requirements foreign key(id_requirement) references requirements(id) on delete cascade on update cascade) TYPE=INNODB;
 
 create table steps (id int primary key auto_increment, id_testcase int not null, description text, expected_result text, failed_result text,sequence varchar(255) not null default 0, constraint fk_steps_testcases foreign key (id_testcase) references  testcases(id) on delete cascade on update cascade) TYPE=INNODB;
 
