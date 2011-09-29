@@ -23,7 +23,11 @@ public class PlanUtil {
 		SqlSessionMapper<SessionMapper> sesMapper = SqlConnection.getSessionMapper(SessionMapper.class);
 		List<Session> planSessions = sesMapper.getMapper().getAllByPlan(plan.getId().intValue());
 		sesMapper.close();
-		return planSessions.size() > 0;
+		boolean allOpened=true;
+		for (Session ses: planSessions){
+			allOpened=allOpened && ses.isOpened();
+		}
+		return !allOpened;
 	}
 
 	public static void updatePlan(Plan plan, HashSet<TestCase> testCasesSet) throws JWTestException {
