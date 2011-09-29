@@ -29,7 +29,11 @@ public class TestCaseUtil {
 		// Check if there is any result with this testcase
 		List<Result> tres = sesMapper.getSqlSession().getMapper(ResultMapper.class).getAllByTestCase(testCase.getId());
 		sesMapper.close();
-		return tres.size() > 0;
+		boolean allOpened=true;
+		for  (Result r : tres){
+			allOpened = allOpened && r.getSession().isOpened();
+		}
+		return !allOpened;
 	}
 
 	public static HashMap<BigInteger, BigInteger> updateTestCase(TestCase testCase, List<TestCase> dependencies) throws JWTestException {
