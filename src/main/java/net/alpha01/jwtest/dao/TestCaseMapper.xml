@@ -43,7 +43,7 @@
 	</select>
 	
 	<select id="getAllByPlan" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
-		select t.* from testcases t inner join plans_testcases as pt on pt.id_testcase=t.id and pt.id_plan=#{id} and t.version = (select MAX(version) from testcases where id=t.id);
+		select t.* from testcases t inner join plans_testcases as pt on pt.id_testcase=t.id and pt.id_plan=#{id} and t.new_version=0; 
 	</select>
 	
 	<insert id="add" flushCache="true" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.TestCase">
