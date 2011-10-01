@@ -18,6 +18,7 @@ import net.alpha01.jwtest.exports.RequirementODSExporter;
 import net.alpha01.jwtest.exports.ResultCSVExporter;
 import net.alpha01.jwtest.exports.TestCaseCSVExporter;
 import net.alpha01.jwtest.exports.TestCaseODSExporter;
+import net.alpha01.jwtest.util.JWTestConfig;
 
 import org.apache.log4j.Logger;
 import org.apache.wicket.RequestCycle;
@@ -33,21 +34,31 @@ import org.apache.wicket.util.resource.FileResourceStream;
 public class ExportPage extends LayoutPage {
 	private Model<Session> selectedSession = new Model<Session>();
 	private Model<Plan> selectedPlan = new Model<Plan>();
-
+	private String type;
+	private String ext;
+	
 	public ExportPage() {
+		type=JWTestConfig.getProp("export.type");
+		ext="ODS".equals(type)?".ods":"csv";
+		
 		IModel<File> requirementCVSfileModel = new TmpFileDownloadModel() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected File getFile() {
 				try {
-					return RequirementODSExporter.exportToODS();
+					if ("ODS".equals(type)){
+						return RequirementODSExporter.exportToODS();
+					}
+					else{
+						return RequirementCSVExporter.exportToCSV();
+					}
 				} catch (JWTestException e) {
 					return null;
 				}
 			}
 		};
-		add(new DownloadLink("requirementsExportLnk", requirementCVSfileModel, getSession().getCurrentProject().getName() + "_requirements.csv").add(new ContextImage("exportRequirementsImg", "images/export_requirements.png")));
+		add(new DownloadLink("requirementsExportLnk", requirementCVSfileModel, getSession().getCurrentProject().getName() + "_requirements."+ext).add(new ContextImage("exportRequirementsImg", "images/export_requirements.png")));
 
 		IModel<File> testCaseCVSfileModel = new TmpFileDownloadModel() {
 			private static final long serialVersionUID = 1L;
@@ -55,13 +66,18 @@ public class ExportPage extends LayoutPage {
 			@Override
 			protected File getFile() {
 				try {
-					return TestCaseODSExporter.exportToODS();
+					if ("ODS".equals(type)){
+						return TestCaseODSExporter.exportToODS();
+					}
+					else{
+						return TestCaseCSVExporter.exportToCSV();
+					}
 				} catch (JWTestException e) {
 					return null;
 				}
 			}
 		};
-		add(new DownloadLink("testcasesExportLnk", testCaseCVSfileModel, getSession().getCurrentProject().getName() + "_testcases.csv").add(new ContextImage("exportTestcasesImg", "images/export_testcases.png")));
+		add(new DownloadLink("testcasesExportLnk", testCaseCVSfileModel, getSession().getCurrentProject().getName() + "_testcases."+ext).add(new ContextImage("exportTestcasesImg", "images/export_testcases.png")));
 		 
 		Form<String> planForm = new Form<String>("planForm") {
 			private static final long serialVersionUID = 1L;
