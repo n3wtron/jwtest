@@ -71,7 +71,7 @@ public class TestCaseODSExporter {
 					
 				}
 			}
-			RequirementODSExporter.storeDocComponent(xComponent, "file://"+tmpFile.getAbsolutePath());
+			RequirementODSExporter.storeDocComponent(xComponent, "file:///"+tmpFile.getAbsolutePath().replace('\\', '/'));
 			RequirementODSExporter.closeDocComponent(xComponent);
 			return tmpFile;
 		

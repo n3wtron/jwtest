@@ -35,6 +35,7 @@ import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.RequirementMapper.RequirementSelectSort;
 import net.alpha01.jwtest.exceptions.JWTestException;
+import net.alpha01.jwtest.util.JWTestConfig;
 import au.com.bytecode.opencsv.CSVWriter;
 
 public class RequirementODSExporter {
@@ -52,7 +53,7 @@ public class RequirementODSExporter {
 			
 			tmpFile.deleteOnExit();
 			XComponent xComponent=exportToXComponent();
-			storeDocComponent(xComponent, "file://"+tmpFile.getAbsolutePath());
+			storeDocComponent(xComponent, "file:///"+tmpFile.getAbsolutePath().replace('\\', '/'));
 			closeDocComponent(xComponent);
 			return tmpFile;
 		
@@ -99,7 +100,8 @@ public class RequirementODSExporter {
 	 * @throws Exception
 	 */
 	public static XComponent createXComponent() throws BootstrapException, Exception{
-		String oooExeFolder="/usr/lib/libreoffice/program/";
+		String oooExeFolder=JWTestConfig.getProp("openoffice.oooExeFolder");
+		String template=JWTestConfig.getProp("openoffice.template").replace('\\','/');
 		XComponentContext context = BootstrapSocketConnector.bootstrap(oooExeFolder);
 		System.out.println("Trying to connect to OOo service... ");
 		 
@@ -108,7 +110,7 @@ public class RequirementODSExporter {
 		XMultiComponentFactory factory = context.getServiceManager();
 		String available = (factory != null ? "available" : "not available");
 		
-		System.out.println("… the service is '" +available +"'! ");
+		System.out.println("the the service is '" +available +"'! ");
 		
 		XComponentLoader xcomponentloader = (XComponentLoader) 
 				UnoRuntime.queryInterface(XComponentLoader.class,factory.createInstanceWithContext("com.sun.star.frame.Desktop", context));
@@ -119,7 +121,7 @@ public class RequirementODSExporter {
         loadProps[0].Name = "Hidden";
         loadProps[0].Value = new Boolean(true);
         
-		XComponent xComponent = xcomponentloader.loadComponentFromURL("file:///tmp/PianoSessioneDiTest.ods", "_blank", 0,loadProps);
+		XComponent xComponent = xcomponentloader.loadComponentFromURL("file:///"+template, "_blank", 0,loadProps);
 		return xComponent;
 	}
 	/**
