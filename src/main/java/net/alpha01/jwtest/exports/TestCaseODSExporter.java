@@ -1,8 +1,6 @@
 package net.alpha01.jwtest.exports;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Iterator;
 
 import net.alpha01.jwtest.JWTestSession;
@@ -25,8 +23,6 @@ import com.sun.star.comp.helper.BootstrapException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.uno.Exception;
-
-import au.com.bytecode.opencsv.CSVWriter;
 
 public class TestCaseODSExporter {
 	

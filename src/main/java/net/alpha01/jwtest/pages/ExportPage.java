@@ -13,9 +13,11 @@ import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.exports.PlanCSVExporter;
+import net.alpha01.jwtest.exports.PlanODSExporter;
 import net.alpha01.jwtest.exports.RequirementCSVExporter;
 import net.alpha01.jwtest.exports.RequirementODSExporter;
 import net.alpha01.jwtest.exports.ResultCSVExporter;
+import net.alpha01.jwtest.exports.ResultODSExporter;
 import net.alpha01.jwtest.exports.TestCaseCSVExporter;
 import net.alpha01.jwtest.exports.TestCaseODSExporter;
 import net.alpha01.jwtest.util.JWTestConfig;
@@ -84,9 +86,17 @@ public class ExportPage extends LayoutPage {
 
 			@Override
 			protected void onSubmit() {
-				
+				type=JWTestConfig.getProp("export.type");
+				ext="ODS".equals(type)?".ods":"csv";
 				try {
-					final File csvFile = PlanCSVExporter.exportToCSV(selectedPlan.getObject().getId().intValue());
+					final File csvFile ;
+					if ("ODS".equals(type)){
+						csvFile = PlanODSExporter.exportToODS(selectedPlan.getObject().getId().intValue());
+					}
+					else{
+						csvFile = PlanCSVExporter.exportToCSV(selectedPlan.getObject().getId().intValue());
+					}
+					
 					getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(new FileResourceStream(csvFile)) {
 						@Override
 						public void detach(RequestCycle requestCycle) {
@@ -96,7 +106,7 @@ public class ExportPage extends LayoutPage {
 						}
 						@Override
 						public String getFileName() {
-							return JWTestSession.getProject().getName() +"_"+selectedPlan.getObject().getName()+ "_plan.csv";
+							return JWTestSession.getProject().getName() +"_"+selectedPlan.getObject().getName()+ "_plan."+ext;
 						}
 					});
 				} catch (JWTestException e) {
@@ -117,9 +127,18 @@ public class ExportPage extends LayoutPage {
 
 			@Override
 			protected void onSubmit() {
-				
+				type=JWTestConfig.getProp("export.type");
+				ext="ODS".equals(type)?".ods":"csv";
 				try {
-					final File csvFile = ResultCSVExporter.exportToCSV(selectedSession.getObject().getId().intValue());
+					final File csvFile;
+					if ("ODS".equals(type)){
+						csvFile = ResultODSExporter.exportToODS(1,selectedSession.getObject().getId().intValue());
+					}
+					else{
+						csvFile = ResultCSVExporter.exportToCSV(selectedSession.getObject().getId().intValue());
+					}
+					
+					
 					getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(new FileResourceStream(csvFile)) {
 						@Override
 						public void detach(RequestCycle requestCycle) {
@@ -129,7 +148,7 @@ public class ExportPage extends LayoutPage {
 						}
 						@Override
 						public String getFileName() {
-							return JWTestSession.getProject().getName() + "_"+selectedSession.getObject().getStart_date()+"_sessionresult.csv";
+							return JWTestSession.getProject().getName() + "_"+selectedSession.getObject().getStart_date()+"_sessionresult."+ext;
 						}
 					});
 				} catch (JWTestException e) {

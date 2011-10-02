@@ -79,7 +79,7 @@ public class RequirementODSExporter {
 		Iterator<Requirement> itr = sesMapper.getMapper().getAll(new RequirementSelectSort(prj.getId(), "num", true)).iterator();
 		sesMapper.close();
 		XComponent xComponent=createXComponent();
-		XSpreadsheet xSpreadsheet=getSpreadSheet(xComponent);
+		XSpreadsheet xSpreadsheet=getSpreadSheet(xComponent, "Requisiti");
 		
 		int y=10;
 	
@@ -121,7 +121,7 @@ public class RequirementODSExporter {
         loadProps[0].Name = "Hidden";
         loadProps[0].Value = new Boolean(true);
         
-		XComponent xComponent = xcomponentloader.loadComponentFromURL("file:///"+template, "_blank", 0,loadProps);
+		XComponent xComponent = xcomponentloader.loadComponentFromURL("file://"+template, "_blank", 0,loadProps);
 		return xComponent;
 	}
 	/**
