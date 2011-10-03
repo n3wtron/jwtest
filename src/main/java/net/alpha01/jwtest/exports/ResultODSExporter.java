@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Iterator;
 
+import org.jsoup.Jsoup;
+
 import com.sun.star.comp.helper.BootstrapException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.sheet.XSpreadsheet;
@@ -52,8 +54,11 @@ public class ResultODSExporter {
 				Result res = itr.next();
 				TestCase test = testMapper.get(res.getId_testcase());
 				Requirement req= reqMapper.get(test.getId_requirement());
-				String description=test.getDescription();
-				String expectedResult=test.getExpected_result();
+				String description=test.getDescription()!=null?Jsoup.parse(test.getDescription()).text():"";
+				String expectedResult=test.getExpected_result()!=null?Jsoup.parse(test.getExpected_result()).text():"";
+				String idReq=req.getType()+"-"+req.getNum()+"-"+test.getId().toString();
+				String name=test.getName()!=null?Jsoup.parse(test.getName()).text():"";
+				String note=res.getNote()!=null?Jsoup.parse(res.getNote()).text():"";
 				
 				Iterator<Step> its = stepMapper.getAll(test.getId().intValue()).iterator();
 				int i=0;
@@ -70,13 +75,13 @@ public class ResultODSExporter {
 					result="C";
 				}
 				
-				xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType()+"-"+req.getNum()+"-"+test.getId().toString());
-			
-				xSpreadsheet.getCellByPosition(2, y).setFormula(test.getName());
+				
+				xSpreadsheet.getCellByPosition(1, y).setFormula(idReq);
+				xSpreadsheet.getCellByPosition(2, y).setFormula(name);
 				xSpreadsheet.getCellByPosition(3, y).setFormula(description);
 				xSpreadsheet.getCellByPosition(4, y).setFormula(expectedResult);
 				xSpreadsheet.getCellByPosition(5, y).setFormula(result);
-				xSpreadsheet.getCellByPosition(7, y++).setFormula(res.getNote());
+				xSpreadsheet.getCellByPosition(7, y++).setFormula(note);
 				
 			}
 		

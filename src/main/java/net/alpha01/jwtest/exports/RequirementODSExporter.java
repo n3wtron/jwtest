@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.jsoup.Jsoup;
+
 import ooo.connector.BootstrapSocketConnector;
 
 import com.sun.star.beans.PropertyValue;
@@ -85,10 +87,15 @@ public class RequirementODSExporter {
 	
 		while (itr.hasNext()){
 			Requirement req = itr.next();
-			xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType().toString());
-			xSpreadsheet.getCellByPosition(2, y).setFormula(req.getNum().toString());
-			xSpreadsheet.getCellByPosition(3, y).setFormula(req.getName());
-			xSpreadsheet.getCellByPosition(4, y++).setFormula(req.getDescription());
+			String type=req.getType().toString();
+			String num=req.getNum().toString();
+			String name=req.getName()!=null?Jsoup.parse(req.getName()).text():"";
+			String description=req.getDescription()!=null?Jsoup.parse(req.getDescription()).text():"";
+			
+			xSpreadsheet.getCellByPosition(1, y).setFormula(type);
+			xSpreadsheet.getCellByPosition(2, y).setFormula(num);
+			xSpreadsheet.getCellByPosition(3, y).setFormula(name);
+			xSpreadsheet.getCellByPosition(4, y++).setFormula(description);
 		}
 		return xComponent;
 	}
