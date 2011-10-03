@@ -59,7 +59,7 @@ public class PlanODSExporter {
 			}
 			xSpreadsheet.getCellByPosition(1, y).setFormula(tCase.getRequirement().getType().toString());
 			xSpreadsheet.getCellByPosition(2, y).setFormula(tCase.getRequirement().getNum().toString());
-			xSpreadsheet.getCellByPosition(4, y).setFormula(tCase.getRequirement().getId().toString());
+			xSpreadsheet.getCellByPosition(4, y).setFormula(tCase.getId().toString());
 			xSpreadsheet.getCellByPosition(5, y).setFormula(tCase.getName());
 			xSpreadsheet.getCellByPosition(7, y).setFormula(description);
 			xSpreadsheet.getCellByPosition(8, y++).setFormula(expectedResult);
@@ -78,7 +78,7 @@ public class PlanODSExporter {
 	public static File exportToODS(int idPlan) throws JWTestException {
 		File tmpFile;
 		try {
-			tmpFile = File.createTempFile("jwtest_export_plan", ".");
+			tmpFile = File.createTempFile("jwtest_export_plan", ".ods");
 			Logger.getLogger(PlanODSExporter.class).debug("Exporting Plan on tmpFile:" + tmpFile.getAbsolutePath());
 			tmpFile.deleteOnExit();
 			

@@ -121,7 +121,7 @@ public class RequirementODSExporter {
         loadProps[0].Name = "Hidden";
         loadProps[0].Value = new Boolean(true);
         
-		XComponent xComponent = xcomponentloader.loadComponentFromURL("file://"+template, "_blank", 0,loadProps);
+		XComponent xComponent = xcomponentloader.loadComponentFromURL("file:///"+template, "_blank", 0,loadProps);
 		return xComponent;
 	}
 	/**

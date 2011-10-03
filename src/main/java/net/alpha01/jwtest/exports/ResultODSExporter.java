@@ -31,7 +31,7 @@ public class ResultODSExporter {
 	public static File exportToODS(int idSession) throws JWTestException{
 		File tmpFile;
 		try {
-			tmpFile = File.createTempFile("jwtest_export_results", ".csv");
+			tmpFile = File.createTempFile("jwtest_export_results", ".ods");
 			tmpFile.deleteOnExit();
 			
 
