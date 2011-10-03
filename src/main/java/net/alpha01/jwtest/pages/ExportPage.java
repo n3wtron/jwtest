@@ -132,7 +132,7 @@ public class ExportPage extends LayoutPage {
 				try {
 					final File csvFile;
 					if ("ODS".equals(type)){
-						csvFile = ResultODSExporter.exportToODS(1,selectedSession.getObject().getId().intValue());
+						csvFile = ResultODSExporter.exportToODS(selectedSession.getObject().getId().intValue());
 					}
 					else{
 						csvFile = ResultCSVExporter.exportToCSV(selectedSession.getObject().getId().intValue());

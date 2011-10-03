@@ -3,6 +3,7 @@ package net.alpha01.jwtest.exports;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Iterator;
 
 import com.sun.star.comp.helper.BootstrapException;
@@ -12,11 +13,13 @@ import com.sun.star.uno.Exception;
 
 import net.alpha01.jwtest.beans.Requirement;
 import net.alpha01.jwtest.beans.Result;
+import net.alpha01.jwtest.beans.Session;
 import net.alpha01.jwtest.beans.Step;
 import net.alpha01.jwtest.beans.TestCase;
 import net.alpha01.jwtest.dao.RequirementMapper;
 import net.alpha01.jwtest.dao.ResultMapper;
 import net.alpha01.jwtest.dao.ResultMapper.ResultSort;
+import net.alpha01.jwtest.dao.SessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.StepMapper;
@@ -25,19 +28,22 @@ import net.alpha01.jwtest.exceptions.JWTestException;
 import au.com.bytecode.opencsv.CSVWriter;
 
 public class ResultODSExporter {
-	public static File exportToODS(int idPlan, int idSession) throws JWTestException{
+	public static File exportToODS(int idSession) throws JWTestException{
 		File tmpFile;
 		try {
 			tmpFile = File.createTempFile("jwtest_export_results", ".csv");
 			tmpFile.deleteOnExit();
 			
-			XComponent xComponent=PlanODSExporter.exportToXComponent(idPlan);
-			XSpreadsheet xSpreadsheet=RequirementODSExporter.getSpreadSheet(xComponent, "Esecuzione");
-			
+
 			SqlSessionMapper<ResultMapper> sesMapper = SqlConnection.getSessionMapper(ResultMapper.class);
+			SessionMapper sessionMapper = sesMapper.getSqlSession().getMapper(SessionMapper.class);
 			TestCaseMapper testMapper = sesMapper.getSqlSession().getMapper(TestCaseMapper.class);
 			RequirementMapper reqMapper = sesMapper.getSqlSession().getMapper(RequirementMapper.class);
 			StepMapper stepMapper = sesMapper.getSqlSession().getMapper(StepMapper.class);
+			Session sess=sessionMapper.get(BigInteger.valueOf(idSession));
+			
+			XComponent xComponent=PlanODSExporter.exportToXComponent(sess.getId_plan().intValue());
+			XSpreadsheet xSpreadsheet=RequirementODSExporter.getSpreadSheet(xComponent, "Esecuzione");
 			
 			Iterator<Result> itr = sesMapper.getMapper().getAll(new ResultSort(idSession)).iterator();
 			
