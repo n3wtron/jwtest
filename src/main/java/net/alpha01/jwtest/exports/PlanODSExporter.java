@@ -57,12 +57,10 @@ public class PlanODSExporter {
 				description += i + ") " + step.getDescription();
 				expectedResult += i + ") " + step.getExpected_result();
 			}
-			xSpreadsheet.getCellByPosition(1, y).setFormula(tCase.getRequirement().getType().toString());
-			xSpreadsheet.getCellByPosition(2, y).setFormula(tCase.getRequirement().getNum().toString());
-			xSpreadsheet.getCellByPosition(4, y).setFormula(tCase.getId().toString());
-			xSpreadsheet.getCellByPosition(5, y).setFormula(tCase.getName());
-			xSpreadsheet.getCellByPosition(7, y).setFormula(description);
-			xSpreadsheet.getCellByPosition(8, y++).setFormula(expectedResult);
+			xSpreadsheet.getCellByPosition(1, y).setFormula(tCase.getRequirement().getType().toString()+"-"+tCase.getRequirement().getNum().toString()+"-"+tCase.getId().toString());
+			xSpreadsheet.getCellByPosition(2, y).setFormula(tCase.getName());
+			xSpreadsheet.getCellByPosition(4, y).setFormula(description);
+			xSpreadsheet.getCellByPosition(5, y++).setFormula(expectedResult);
 		}
 		sesMapper.close();
 		return xComponent;

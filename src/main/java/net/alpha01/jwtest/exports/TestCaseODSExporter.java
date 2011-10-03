@@ -63,12 +63,11 @@ public class TestCaseODSExporter {
 					expectedResult+=i+") "+step.getExpected_result();
 				}
 				
-				xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType().toString());
-				xSpreadsheet.getCellByPosition(2, y).setFormula(req.getNum().toString());
-				xSpreadsheet.getCellByPosition(4, y).setFormula(tCase.getId().toString());
-				xSpreadsheet.getCellByPosition(5, y).setFormula(tCase.getName());
-				xSpreadsheet.getCellByPosition(6, y).setFormula(description);
-				xSpreadsheet.getCellByPosition(7, y++).setFormula(expectedResult);
+				xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType().toString()+"-"+req.getNum().toString());
+				xSpreadsheet.getCellByPosition(2, y).setFormula(tCase.getId().toString());
+				xSpreadsheet.getCellByPosition(3, y).setFormula(tCase.getName());
+				xSpreadsheet.getCellByPosition(4, y).setFormula(description);
+				xSpreadsheet.getCellByPosition(5, y++).setFormula(expectedResult);
 				
 			}
 		}

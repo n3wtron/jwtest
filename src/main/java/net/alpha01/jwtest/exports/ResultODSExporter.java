@@ -70,13 +70,13 @@ public class ResultODSExporter {
 					result="C";
 				}
 				
-				xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType()+"-"+req.getNum());
-				xSpreadsheet.getCellByPosition(2, y).setFormula(test.getId().toString());
-				xSpreadsheet.getCellByPosition(3, y).setFormula(test.getName());
-				xSpreadsheet.getCellByPosition(5, y).setFormula(description);
-				xSpreadsheet.getCellByPosition(6, y).setFormula(expectedResult);
-				xSpreadsheet.getCellByPosition(7, y).setFormula(result);
-				xSpreadsheet.getCellByPosition(8, y++).setFormula(res.getNote());
+				xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType()+"-"+req.getNum()+"-"+test.getId().toString());
+			
+				xSpreadsheet.getCellByPosition(2, y).setFormula(test.getName());
+				xSpreadsheet.getCellByPosition(3, y).setFormula(description);
+				xSpreadsheet.getCellByPosition(4, y).setFormula(expectedResult);
+				xSpreadsheet.getCellByPosition(5, y).setFormula(result);
+				xSpreadsheet.getCellByPosition(7, y++).setFormula(res.getNote());
 				
 			}
 		

@@ -87,8 +87,8 @@ public class RequirementODSExporter {
 			Requirement req = itr.next();
 			xSpreadsheet.getCellByPosition(1, y).setFormula(req.getType().toString());
 			xSpreadsheet.getCellByPosition(2, y).setFormula(req.getNum().toString());
-			xSpreadsheet.getCellByPosition(5, y).setFormula(req.getName());
-			xSpreadsheet.getCellByPosition(6, y++).setFormula(req.getDescription());
+			xSpreadsheet.getCellByPosition(3, y).setFormula(req.getName());
+			xSpreadsheet.getCellByPosition(4, y++).setFormula(req.getDescription());
 		}
 		return xComponent;
 	}
