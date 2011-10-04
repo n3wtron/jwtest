@@ -18,7 +18,7 @@ create table testcases(id int primary key auto_increment, id_requirement int not
 
 create table steps (id int primary key auto_increment, id_testcase int not null, description text, expected_result text, failed_result text,sequence varchar(255) not null default 0, constraint fk_steps_testcases foreign key (id_testcase) references  testcases(id) on delete cascade on update cascade) TYPE=INNODB;
 
-create table plans (id int primary key auto_increment, id_project int not null, name varchar(255),creation_date timestamp, constraint fk_plans_projects foreign key (id_project) references projects(id) on delete cascade on update cascade) TYPE=INNODB;
+create table plans (id int primary key auto_increment, id_project int not null, new_version int default 0, name varchar(255),creation_date timestamp, constraint fk_plans_projects foreign key (id_project) references projects(id) on delete cascade on update cascade) TYPE=INNODB;
 
 create table plans_testcases (id_plan int not null, id_testcase int not null, primary key(id_plan, id_testcase), constraint fk_plans_testcases_plans foreign key (id_plan) references plans(id) on delete cascade on update cascade, constraint fk_plans_testcases_testcase foreign key(id_testcase) references testcases(id) on delete cascade on update cascade) TYPE=INNODB;
 
