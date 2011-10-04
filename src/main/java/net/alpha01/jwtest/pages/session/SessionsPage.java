@@ -74,7 +74,7 @@ public class SessionsPage extends LayoutPage {
 			add(new Label("profileDescription"));
 		}
 		
-		if (currSession!=null && currSession.getId_profile()!=null){
+		if (currSession!=null && currSession.getId_plan()!=null){
 			//PLAN LNK
 			BookmarkablePageLink<String> planLnk=new BookmarkablePageLink<String>("planLnk", PlanPage.class,new PageParameters("idPlan="+currSession.getId_plan()));
 			Plan plan = sesMapper.getSqlSession().getMapper(PlanMapper.class).get(currSession.getId_plan());
