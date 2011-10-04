@@ -41,4 +41,5 @@ public interface PlanMapper {
 	
 	Integer addTestCase(FK fk);
 	Integer deleteTestCase(BigInteger idPlan);
+	Integer cleanPlan();
 }

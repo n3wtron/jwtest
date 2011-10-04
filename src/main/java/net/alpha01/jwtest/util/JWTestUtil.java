@@ -25,5 +25,10 @@ public class JWTestUtil {
 		StringResourceModel model = new StringResourceModel(key, component, null);
 		return model.getObject();
 	}
+	
+	public static void cleanDeadElements(){
+		PlanUtil.cleanPlan();
+		TestCaseUtil.cleanTestCase();
+	}
 
 }

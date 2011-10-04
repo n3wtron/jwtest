@@ -8,8 +8,10 @@ import net.alpha01.jwtest.dao.PlanMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
+import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.pages.project.ProjectPage;
+import net.alpha01.jwtest.util.PlanUtil;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.authorization.strategies.role.Roles;
@@ -35,16 +37,11 @@ public class DeletePlanPage extends LayoutPage {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void onSubmit() {
-				SqlSessionMapper<PlanMapper> mapper = SqlConnection.getSessionMapper(PlanMapper.class);
-				if (mapper.getMapper().delete(plan).equals(1)){
-					info("Plan deleted");
-					mapper.commit();
-					mapper.close();
+				try {
+					PlanUtil.deletePlan(plan);
 					setResponsePage(ProjectPage.class);
-				}else{
-					mapper.rollback();
-					mapper.close();
-					error("ERROR: Plan not deleted SQL ERROR");
+				} catch (JWTestException e) {
+					error(e.getMessage());
 				}
 			}
 		});

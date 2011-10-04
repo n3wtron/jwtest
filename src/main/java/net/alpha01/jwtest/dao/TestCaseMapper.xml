@@ -10,7 +10,7 @@
 	</select>
 	
 	<select id="getAll" parameterType ="net.alpha01.jwtest.dao.TestCaseMapper$TestCaseSelectSort" resultType="net.alpha01.jwtest.beans.TestCase">
-		select * from testcases where id_requirement = #{id_requirement}
+		select t.* from testcases as t where id_requirement = #{id_requirement} and t.new_version=0 
 		<if test="sort!=null">
 			ORDER BY ${sort}
 			<if test="asc == false">
@@ -19,7 +19,7 @@
 		</if>
 	</select>
 	<select id="getAllStat" parameterType ="net.alpha01.jwtest.dao.TestCaseMapper$TestCaseSelectSort" resultType="net.alpha01.jwtest.beans.TestCase">
-		select t.*,(select count(success) from results where id_testcase=t.id and success=1)as success, (select count(*) from results where id_testcase=t.id) as nresults from testcases as t where t.id_requirement = #{id_requirement}
+		select t.*,(select count(success) from results where id_testcase=t.id and success=1)as success, (select count(*) from results where id_testcase=t.id) as nresults from testcases as t where t.id_requirement = #{id_requirement} and t.new_version=0
 		<if test="sort!=null">
 			ORDER BY ${sort}
 			<if test="asc == false">
@@ -39,19 +39,19 @@
 	</select>
 	
 	<select id="getAllByProject" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
-		select t.* from testcases t inner join requirements r on r.id=t.id_requirement where r.id_project=#{id_project} order by t.name;
+		select t.* from testcases t inner join requirements r on r.id=t.id_requirement where r.id_project=#{id_project} and t.new_version=0 order by t.name;
 	</select>
 	
 	<select id="getAllByPlan" parameterType="int" resultType="net.alpha01.jwtest.beans.TestCase">
-		select t.* from testcases t inner join plans_testcases as pt on pt.id_testcase=t.id and pt.id_plan=#{id};
+		select t.* from testcases t inner join plans_testcases as pt on pt.id_testcase=t.id and pt.id_plan=#{id} and t.new_version=0; 
 	</select>
 	
 	<insert id="add" flushCache="true" useGeneratedKeys="true" keyProperty="id" parameterType="net.alpha01.jwtest.beans.TestCase">
-		insert into testcases (id_requirement,name,description,expected_result) values (#{id_requirement},#{name},#{description},#{expected_result});
+		insert into testcases (new_version,id_requirement,name,description,expected_result) values (#{new_version},#{id_requirement},#{name},#{description},#{expected_result});
 	</insert>
 	
 	<update id="update" parameterType="net.alpha01.jwtest.beans.TestCase">
-		update testcases set id_requirement=#{id_requirement},name=#{name},description=#{description},expected_result=#{expected_result} where id=#{id};
+		update testcases set new_version=#{new_version},id_requirement=#{id_requirement},name=#{name},description=#{description},expected_result=#{expected_result} where id=#{id};
 	</update>
 	
 	<delete id="delete" parameterType="net.alpha01.jwtest.beans.TestCase">
@@ -68,5 +68,9 @@
 	
 	<delete id="deleteDependencies" parameterType="int">
 		delete from testcasesdependency where id_testcase=#{id_testcase}
+	</delete>
+	
+	<delete id="cleanTestCase">
+		delete from testcases where new_version!=0 and (id not in (select id_testcase from results) and id not in (select id_testcase from plans_testcases))
 	</delete>
 </mapper>

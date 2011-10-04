@@ -14,6 +14,7 @@ import net.alpha01.jwtest.beans.Result;
 import net.alpha01.jwtest.beans.Step;
 import net.alpha01.jwtest.beans.TestCase;
 import net.alpha01.jwtest.component.BookmarkablePageLinkSecure;
+import net.alpha01.jwtest.component.EmptyLink;
 import net.alpha01.jwtest.component.HtmlLabel;
 import net.alpha01.jwtest.dao.RequirementMapper;
 import net.alpha01.jwtest.dao.ResultMapper;
@@ -58,7 +59,11 @@ public class TestCasePage extends LayoutPage {
 		}
 		SqlSessionMapper<TestCaseMapper> sesTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
 		test = sesTestMapper.getMapper().getStat(BigInteger.valueOf(params.getInt("idTest")));
-		add(new Label("testCaseName", test.getName()));
+		String testCaseName=test.getName();
+		if (!test.getNew_version().equals(BigInteger.ZERO)){
+			testCaseName+=" ["+JWTestUtil.translate("obsolete", this)+"]";
+		}
+		add(new Label("testCaseName", testCaseName));
 		add(new HtmlLabel("testCaseDescription", test.getDescription()));
 		add(new HtmlLabel("testCaseExpectedResult", test.getExpected_result()));
 
@@ -75,8 +80,13 @@ public class TestCasePage extends LayoutPage {
 		// LINKS
 		PageParameters lnkParam = new PageParameters();
 		lnkParam.put("idTest", test.getId());
-		add(new BookmarkablePageLinkSecure<String>("addStepLnk", AddStepPage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("addStepImg", "images/add_step.png")));
-		add(new BookmarkablePageLinkSecure<String>("updTestLnk", UpdateTestCasePage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("updateTestImg", "images/update_test.png")));
+		if (test.getNew_version().equals(BigInteger.ZERO)){
+			add(new BookmarkablePageLinkSecure<String>("addStepLnk", AddStepPage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("addStepImg", "images/add_step.png")));
+			add(new BookmarkablePageLinkSecure<String>("updTestLnk", UpdateTestCasePage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("updateTestImg", "images/update_test.png")));
+		}else{
+			add((new EmptyLink<Void>("addStepLnk")).add(new ContextImage("addStepImg", "images/add_step.png")).setVisible(false));
+			add((new EmptyLink<Void>("updTestLnk")).add(new ContextImage("updateTestImg", "images/update_test.png")).setVisible(false));
+		}
 		add(new BookmarkablePageLinkSecure<String>("delTestLnk", DeleteTestCasePage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("deleteTestImg", "images/delete_test.png")));
 
 		final Model<Boolean> isAuthorized = JWTestUtil.isAuthorized(Roles.ADMIN, "PROJECT_ADMIN", "MANAGER");

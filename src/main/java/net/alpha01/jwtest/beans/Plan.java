@@ -8,16 +8,28 @@ import java.util.Date;
 public class Plan extends IdBean implements Serializable{
 	private static final long serialVersionUID = -3960064974354390005L;
 	private BigInteger id_project;
+	private BigInteger new_version;
 	private BigInteger nSessions;
 	private BigInteger nTests;
 	private Date creation_date;
 	private String name;
+	
+	public Plan(){
+		this.new_version=BigInteger.ZERO;
+	}
 	
 	public BigInteger getId_project() {
 		return id_project;
 	}
 	public void setId_project(BigInteger id_project) {
 		this.id_project = id_project;
+	}
+	
+	public BigInteger getNew_version() {
+		return new_version;
+	}
+	public void setNew_version(BigInteger new_version) {
+		this.new_version = new_version;
 	}
 	public String getName() {
 		return name;
