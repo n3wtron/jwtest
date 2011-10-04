@@ -65,8 +65,10 @@ public class ResultODSExporter {
 				while (its.hasNext()){
 					i++;
 					Step step = its.next();
-					description+=i+") "+step.getDescription();
-					expectedResult+=i+") "+step.getExpected_result();
+					String stepDescription=step.getDescription()!=null?Jsoup.parse(step.getDescription()).text():"";
+					String stepExpectedResult=step.getExpected_result()!=null?Jsoup.parse(step.getExpected_result()).text():"";
+					description+=i+") "+stepDescription;
+					expectedResult+=i+") "+stepExpectedResult;
 				}
 				String result;
 				if (res.getSuccess()){
