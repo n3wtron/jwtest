@@ -2,8 +2,8 @@ package net.alpha01.jwtest.component;
 
 import net.alpha01.jwtest.util.JWTestUtil;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class BookmarkablePageLinkSecure<T> extends BookmarkablePageLink<T> {
 	private static final long serialVersionUID = 1L;

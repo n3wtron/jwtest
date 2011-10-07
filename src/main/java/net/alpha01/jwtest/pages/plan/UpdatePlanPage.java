@@ -23,30 +23,34 @@ import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.panels.DoubleMultipleChoicePanel;
 import net.alpha01.jwtest.util.PlanUtil;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN","MANAGER"})
 public class UpdatePlanPage extends LayoutPage{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Plan plan;
 	private ArrayList<TestCase> testCases;
 	private ArrayList<Requirement> selReqs=new ArrayList<Requirement>();
 	
 	public UpdatePlanPage(final PageParameters params){
 		super(params);
-		if (!params.containsKey("idPlan")){
+		if (params.get("idPlan").isNull()){
 			error("idPlan parameters not found");
 			setResponsePage(ProjectPage.class);
 			return;
 		}
 		SqlSessionMapper<TestCaseMapper> sesTestMapper=SqlConnection.getSessionMapper(TestCaseMapper.class);
-		plan = sesTestMapper.getSqlSession().getMapper(PlanMapper.class).get(BigInteger.valueOf(params.getAsInteger("idPlan")));
+		plan = sesTestMapper.getSqlSession().getMapper(PlanMapper.class).get(BigInteger.valueOf(params.get("idPlan").toLong()));
 		testCases=(ArrayList<TestCase>) sesTestMapper.getMapper().getAllByPlan(plan.getId());
 		
 		
@@ -73,7 +77,7 @@ public class UpdatePlanPage extends LayoutPage{
 				}
 				try {
 					PlanUtil.updatePlan(plan, testCasesSet);
-					setResponsePage(PlanPage.class,new PageParameters("idPlan="+plan.getId().toString()));
+					setResponsePage(PlanPage.class,new PageParameters().add("idPlan",plan.getId().toString()));
 				} catch (JWTestException e) {
 					error(e.getMessage());
 				}

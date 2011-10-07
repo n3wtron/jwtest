@@ -15,7 +15,6 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.pages.requirement.RequirementPage;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
@@ -25,6 +24,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColu
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.ChoiceFilteredPropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilterStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.TextFilteredPropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -33,6 +33,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class RequirementsTablePanel extends Panel {
 	private static final long serialVersionUID = 1L;
@@ -43,7 +44,7 @@ public class RequirementsTablePanel extends Panel {
 		public ReqLink(String id, Requirement req) {
 			super(id);
 			PageParameters params = new PageParameters();
-			params.put("idReq", req.getId());
+			params.add("idReq", req.getId());
 			BookmarkablePageLink<RequirementPage> lnk = new BookmarkablePageLink<RequirementPage>("lnk", RequirementPage.class, params);
 			lnk.add(new Label("name", req.getName()));
 			add(lnk);
@@ -59,7 +60,7 @@ public class RequirementsTablePanel extends Panel {
 
 		public RequirementsDataProvider(int idProject) {
 			this.idProject = idProject;
-			setSort("num", true);
+			setSort(new SortParam("num", true));
 		}
 
 		@Override
@@ -75,10 +76,11 @@ public class RequirementsTablePanel extends Panel {
 		}
 
 		@Override
-		public void setSort(String property, boolean ascending) {
-			Logger.getLogger(getClass()).debug("ordinamento per " + property + " asc:" + ascending);
-			super.setSort(property, ascending);
+		public void setSort(SortParam sortParam) {
+			Logger.getLogger(getClass()).debug("ordinamento per " + sortParam.getProperty() + " asc:" + sortParam.isAscending());
+			super.setSort(sortParam);
 		}
+		
 
 		@Override
 		public int size() {
@@ -110,26 +112,26 @@ public class RequirementsTablePanel extends Panel {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public RequirementsTablePanel(String id, int idProject) {
 		super(id);
-		IColumn<Requirement>[] columns = new IColumn[4];
+		List<IColumn<Requirement>> columns =new ArrayList<IColumn<Requirement>>();
 		SqlSessionMapper<RequirementMapper> sesMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
 		ArrayList<RequirementType> allTypes = (ArrayList<RequirementType>) sesMapper.getMapper().getTypes();
 		sesMapper.close();
-		columns[0] = new ChoiceFilteredPropertyColumn<Requirement, RequirementType>(new StringResourceModel("requirement.type", this, null), "type", "type", new Model(allTypes)){
+		columns.add(new ChoiceFilteredPropertyColumn<Requirement, RequirementType>(new StringResourceModel("requirement.type", this, null), "type", "type", new Model(allTypes)){
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public String getCssClass() {
 				return "minimizedColumn";
 			}
-		};
-		columns[1] = new TextFilteredPropertyColumn<Requirement, String>(new Model<String>("Num"), "num", "num"){
+		});
+		columns.add( new TextFilteredPropertyColumn<Requirement, String>(new Model<String>("Num"), "num", "num"){
 			private static final long serialVersionUID = 1L;			
 			@Override
 			public String getCssClass() {
 				return "minimizedColumn";
 			}
-		};
-		columns[2] = new TextFilteredPropertyColumn<Requirement, String>(new StringResourceModel("requirement.name", this, null), "name", "name") {
+		});
+		columns.add( new TextFilteredPropertyColumn<Requirement, String>(new StringResourceModel("requirement.name", this, null), "name", "name") {
 			private static final long serialVersionUID = -5517507346403267858L;
 			@Override
 			public void populateItem(Item<ICellPopulator<Requirement>> item, String contentId, final IModel<Requirement> model) {
@@ -140,14 +142,14 @@ public class RequirementsTablePanel extends Panel {
 			public String getCssClass() {
 				return "maximizedColumn";
 			}
-		};
-		columns[3] = new PropertyColumn<Requirement>(new Model<String>("N.Test"), "ntest", "ntest"){
+		});
+		columns.add(new PropertyColumn<Requirement>(new Model<String>("N.Test"), "ntest", "ntest"){
 			private static final long serialVersionUID = 1L;
 			@Override
 			public String getCssClass() {
 				return "minimizedColumn";
 			}
-		};
+		});
 		RequirementsDataProvider dataProvider = new RequirementsDataProvider(idProject);
 		DataTable<Requirement> requirementsTable = new DataTableAlternatedRows<Requirement>("requirementsTable", columns, dataProvider, 30);
 		requirementsTable.addTopToolbar(new HeadersToolbar(requirementsTable, dataProvider));

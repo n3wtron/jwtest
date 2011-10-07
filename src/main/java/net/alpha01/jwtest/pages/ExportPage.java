@@ -18,17 +18,19 @@ import net.alpha01.jwtest.exports.ResultCSVExporter;
 import net.alpha01.jwtest.exports.TestCaseCSVExporter;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
+import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.resource.FileResourceStream;
 
 public class ExportPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private Model<Session> selectedSession = new Model<Session>();
 	private Model<Plan> selectedPlan = new Model<Plan>();
 
@@ -66,21 +68,16 @@ public class ExportPage extends LayoutPage {
 
 			@Override
 			protected void onSubmit() {
-				
 				try {
 					final File csvFile = PlanCSVExporter.exportToCSV(selectedPlan.getObject().getId().intValue());
-					getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(new FileResourceStream(csvFile)) {
+					getRequestCycle().scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(new FileResourceStream(csvFile)){
 						@Override
-						public void detach(RequestCycle requestCycle) {
+						public void detach(IRequestCycle requestCycle) {
 							Logger.getLogger(getPageClass()).debug("Temporary file deleted");
 							csvFile.delete();
 							super.detach(requestCycle);
 						}
-						@Override
-						public String getFileName() {
-							return JWTestSession.getProject().getName() +"_"+selectedPlan.getObject().getName()+ "_plan.csv";
-						}
-					});
+					}.setFileName(JWTestSession.getProject().getName() +"_"+selectedPlan.getObject().getName()+ "_plan.csv").setContentDisposition(ContentDisposition.ATTACHMENT));
 				} catch (JWTestException e) {
 					error("FATAL: Cannot export session");
 				}
@@ -102,18 +99,13 @@ public class ExportPage extends LayoutPage {
 				
 				try {
 					final File csvFile = ResultCSVExporter.exportToCSV(selectedSession.getObject().getId().intValue());
-					getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(new FileResourceStream(csvFile)) {
-						@Override
-						public void detach(RequestCycle requestCycle) {
+					getRequestCycle().scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(new FileResourceStream(csvFile)){
+						public void detach(IRequestCycle requestCycle) {
 							Logger.getLogger(getPageClass()).debug("Temporary file deleted");
 							csvFile.delete();
 							super.detach(requestCycle);
-						}
-						@Override
-						public String getFileName() {
-							return JWTestSession.getProject().getName() + "_"+selectedSession.getObject().getStart_date()+"_sessionresult.csv";
-						}
-					});
+						};
+					}.setFileName(JWTestSession.getProject().getName() + "_"+selectedSession.getObject().getStart_date()+"_sessionresult.csv").setContentDisposition(ContentDisposition.ATTACHMENT));
 				} catch (JWTestException e) {
 					error("FATAL: Cannot export session");
 				}

@@ -15,8 +15,8 @@ import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
@@ -25,6 +25,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN"})
 public class ProjectVersionPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private ProjectVersion nPv = new ProjectVersion(getSession().getCurrentProject());
 	private ArrayList<ProjectVersion> selectedVersion = new ArrayList<ProjectVersion>();
 	private ProjectVersion uPv = new ProjectVersion();
@@ -73,9 +74,15 @@ public class ProjectVersionPage extends LayoutPage {
 					versions.clear();
 					versions.addAll(sesMapper.getMapper().getAll(prj.getId()));
 					sesMapper.close();
-					target.addComponent(versionList);
+					target.add(versionList);
 					refreshUpdateForm(target);
 				}
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget arg0, Form<?> arg1) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
@@ -103,6 +110,11 @@ public class ProjectVersionPage extends LayoutPage {
 				}
 				sesMapper.close();
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget arg0, Form<?> arg1) {
+				// TODO Auto-generated method stub	
+			}
 		};
 		updateBtn.setOutputMarkupId(true);
 		versionsForm.add(updateBtn);
@@ -121,14 +133,20 @@ public class ProjectVersionPage extends LayoutPage {
 					sesMapper.commit();
 					versions.add(nPv);
 					nPv = new ProjectVersion(prj);
-					target.addComponent(versionList);
+					target.add(versionList);
 					versionFld.setModel(new PropertyModel<String>(nPv, "version"));
-					target.addComponent(versionFld);
+					target.add(versionFld);
 				} else {
 					error("SQL Error");
 					sesMapper.rollback();
 				}
 				sesMapper.close();
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget arg0, Form<?> arg1) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		add(versionsForm);
@@ -153,8 +171,8 @@ public class ProjectVersionPage extends LayoutPage {
 		updVersionFld.setEnabled(enabled);
 		releasedFld.setEnabled(enabled);
 		updateBtn.setEnabled(enabled);
-		target.addComponent(updVersionFld);
-		target.addComponent(updateBtn);
-		target.addComponent(releasedFld);
+		target.add(updVersionFld);
+		target.add(updateBtn);
+		target.add(releasedFld);
 	}
 }

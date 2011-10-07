@@ -1,5 +1,6 @@
 package net.alpha01.jwtest.panels.session;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -65,9 +66,8 @@ public class SessionTablePanel extends Panel {
 	public SessionTablePanel(String id,int idPlan,int rows) {
 		super(id);
 		SessionDataProvider dataProvider = new SessionDataProvider(idPlan);
-		@SuppressWarnings("unchecked")
-		IColumn<Session>[] columns = new IColumn[4];
-		columns[0]=new AbstractColumn<Session>(new Model<String>("ID")) {
+		List<IColumn<Session>> columns = new ArrayList<IColumn<Session>>();
+		columns.add(new AbstractColumn<Session>(new Model<String>("ID")) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -81,10 +81,10 @@ public class SessionTablePanel extends Panel {
 					}
 				});
 			}
-		};
-		columns[1]=new PropertyColumn<Session>(new StringResourceModel("version", this, null), "version");
-		columns[2]=new DatePropertyColumn<Session>(new StringResourceModel("start_date", this, null), "start_date","dd-MM-yyyy HH:mm");
-		columns[3]=new DatePropertyColumn<Session>(new StringResourceModel("end_date", this, null), "end_date","dd-MM-yyyy HH:mm");
+		});
+		columns.add(new PropertyColumn<Session>(new StringResourceModel("version", this, null), "version"));
+		columns.add(new DatePropertyColumn<Session>(new StringResourceModel("start_date", this, null), "start_date","dd-MM-yyyy HH:mm"));
+		columns.add(new DatePropertyColumn<Session>(new StringResourceModel("end_date", this, null), "end_date","dd-MM-yyyy HH:mm"));
 		DataTable<Session> sessionDataTable = new DataTableAlternatedRows<Session>("sessionDataTable", columns, dataProvider, rows);
 		sessionDataTable.addTopToolbar(new HeadersToolbar(sessionDataTable, dataProvider));
 		sessionDataTable.addBottomToolbar(new NavigationToolbar(sessionDataTable));

@@ -1,6 +1,7 @@
 package net.alpha01.jwtest.panels.step;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,6 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.StepMapper;
 import net.alpha01.jwtest.pages.step.UpdateStepPage;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -29,6 +29,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class StepsTablePanel extends Panel {
 	private static final long serialVersionUID = 1L;
@@ -82,37 +83,31 @@ public class StepsTablePanel extends Panel {
 		public LnkStep(String id, Step step) {
 			super(id);
 			PageParameters params = new PageParameters();
-			params.put("idStep", step.getId());
+			params.add("idStep", step.getId());
 			BookmarkablePageLink<String> lnk = new BookmarkablePageLink<String>("updLnk", UpdateStepPage.class, params);
 			add(lnk);
 		}
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public StepsTablePanel(String id, BigInteger idTestCase, boolean modLink) {
 		super(id);
 		dataProvider = new StepDataTable(idTestCase.intValue());
 
-		IColumn<Step>[] columns;
-		if (!modLink) {
-			columns = new IColumn[4];
-		} else {
-			columns = new IColumn[5];
-		}
-		columns[0] = new PropertyColumn<Step>(new Model<String>("Seq"), "sequence");
-		columns[1] = new HtmlPropertyColumn<Step>(new StringResourceModel("description", this, null), "description");
-		columns[2] = new HtmlPropertyColumn<Step>(new StringResourceModel("step.expected", this, null), "expected_result");
-		columns[3] = new HtmlPropertyColumn<Step>(new StringResourceModel("step.failed", this, null), "failed_result");
+		List<IColumn<Step>> columns=new ArrayList<IColumn<Step>>();
+		columns.add( new PropertyColumn<Step>(new Model<String>("Seq"), "sequence"));
+		columns.add( new HtmlPropertyColumn<Step>(new StringResourceModel("description", this, null), "description"));
+		columns.add( new HtmlPropertyColumn<Step>(new StringResourceModel("step.expected", this, null), "expected_result"));
+		columns.add( new HtmlPropertyColumn<Step>(new StringResourceModel("step.failed", this, null), "failed_result"));
 		if (modLink) {
-			columns[4] = new AbstractColumn<Step>(new StringResourceModel("step.update", this, null)) {
+			columns.add(new AbstractColumn<Step>(new StringResourceModel("step.update", this, null)) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void populateItem(Item<ICellPopulator<Step>> item, String contentId, IModel<Step> model) {
 					item.add(new LnkStep(contentId, model.getObject()));
 				}
-			};
+			});
 		}
 
 		DataTable<Step> dTable = new DataTableAlternatedRows<Step>("stepDataTable", columns, dataProvider, 20);
@@ -121,18 +116,13 @@ public class StepsTablePanel extends Panel {
 		add(dTable);
 	}
 
-	@SuppressWarnings("unchecked")
 	public StepsTablePanel(String id, BigInteger idTestCase, final Model<HashMap<Step, Model<Boolean>>> selectedStepModel, boolean modLink) {
 		super(id);
 		StepDataTable dataProvider = new StepDataTable(idTestCase.intValue());
 	
-		IColumn<Step>[] columns;
-		if (!modLink) {
-			columns = new IColumn[5];
-		} else {
-			columns = new IColumn[6];
-		}
-		columns[0] = new AbstractColumn<Step>(new Model<String>("Sel")) {
+		List<IColumn<Step>> columns=new ArrayList<IColumn<Step>>();
+		
+		columns.add( new AbstractColumn<Step>(new Model<String>("Sel")) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -142,21 +132,21 @@ public class StepsTablePanel extends Panel {
 				}
 				item.add(new SelStep(contentId, selectedStepModel.getObject().get(model.getObject())));
 			}
-		};
-		columns[1] = new PropertyColumn<Step>(new Model<String>("Seq"), "sequence");
+		});
+		columns.add( new PropertyColumn<Step>(new Model<String>("Seq"), "sequence"));
 
-		columns[2] = new HtmlPropertyColumn<Step>(new StringResourceModel("description", this, null), "description");
-		columns[3] = new HtmlPropertyColumn<Step>(new StringResourceModel("step.expected", this, null), "expected_result");
-		columns[4] = new HtmlPropertyColumn<Step>(new StringResourceModel("step.failed", this, null), "failed_result");
+		columns.add(new HtmlPropertyColumn<Step>(new StringResourceModel("description", this, null), "description"));
+		columns.add(new HtmlPropertyColumn<Step>(new StringResourceModel("step.expected", this, null), "expected_result"));
+		columns.add(new HtmlPropertyColumn<Step>(new StringResourceModel("step.failed", this, null), "failed_result"));
 		if (modLink) {
-			columns[5] = new AbstractColumn<Step>(new StringResourceModel("step.update", this, null)) {
+			columns.add(new AbstractColumn<Step>(new StringResourceModel("step.update", this, null)) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void populateItem(Item<ICellPopulator<Step>> item, String contentId, IModel<Step> model) {
 					item.add(new LnkStep(contentId, model.getObject()));
 				}
-			};
+			});
 		}
 		dTable = new DataTableAlternatedRows<Step>("stepDataTable", columns, dataProvider, 20);
 		dTable.addTopToolbar(new HeadersToolbar(dTable, dataProvider));

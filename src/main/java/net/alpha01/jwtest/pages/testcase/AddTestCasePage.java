@@ -19,9 +19,8 @@ import net.alpha01.jwtest.pages.requirement.RequirementPage;
 import net.alpha01.jwtest.pages.step.AddStepPage;
 
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -31,19 +30,21 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN","MANAGER"})
 public class AddTestCasePage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private TestCase testCase = new TestCase();
 	private ArrayList<TestCase> dependencies=new ArrayList<TestCase>();
 
 	public AddTestCasePage(final PageParameters params) {
 		super(params);
-		if (!params.containsKey("idReq")) {
+		if (params.get("idReq").isNull()) {
 			error("Parametro idReq non trovato");
 			setResponsePage(ProjectPage.class);
 		}
 		RequirementMapper reqMapper = SqlConnection.getMapper(RequirementMapper.class);
-		Requirement req = reqMapper.get(BigInteger.valueOf(params.getInt("idReq")));
+		Requirement req = reqMapper.get(BigInteger.valueOf(params.get("idReq").toInt()));
 		BookmarkablePageLink<String>requirementLnk=new BookmarkablePageLink<String>("requirementLnk",RequirementPage.class,params);
 		requirementLnk.add(new Label("requirementName", req.getName()));
 		add(requirementLnk);
@@ -74,7 +75,7 @@ public class AddTestCasePage extends LayoutPage {
 			@Override
 			public void onSubmit() {
 				if(addTestCase()){
-					setResponsePage(UpdateTestCasePage.class, new PageParameters("idTest="+testCase.getId()));
+					setResponsePage(UpdateTestCasePage.class, new PageParameters().add("idTest",testCase.getId()));
 				}
 			}
 		});
@@ -84,7 +85,7 @@ public class AddTestCasePage extends LayoutPage {
 			@Override
 			public void onSubmit() {
 				if(addTestCase()){
-					setResponsePage(AddStepPage.class, new PageParameters("idTest="+testCase.getId()));
+					setResponsePage(AddStepPage.class, new PageParameters().add("idTest",testCase.getId()));
 				}
 			}
 		});

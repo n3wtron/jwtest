@@ -5,7 +5,7 @@ import java.io.File;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.util.JWTestUtil;
 
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class PanelLinkSecure extends PanelLink{
 	private static final long serialVersionUID = 1L;

@@ -4,11 +4,11 @@ import java.io.File;
 
 import net.alpha01.jwtest.pages.LayoutPage;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class PanelLink extends Panel{
 	private static final long serialVersionUID = 1L;

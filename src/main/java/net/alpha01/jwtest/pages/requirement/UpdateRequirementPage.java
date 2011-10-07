@@ -19,11 +19,10 @@ import net.alpha01.jwtest.panels.attachment.AddAttachmentPanel;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -33,8 +32,10 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN","TESTER","MANAGER"})
 public class UpdateRequirementPage extends LayoutPage implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Requirement req;
 	private Model<RequirementType> typeModel = new Model<RequirementType>();
 	private ArrayList<Requirement> origDependencies = new ArrayList<Requirement>();
@@ -43,12 +44,12 @@ public class UpdateRequirementPage extends LayoutPage implements Serializable {
 	
 	public UpdateRequirementPage(final PageParameters params) {
 		super(params);
-		if (!params.containsKey("idReq")) {
+		if (params.get("idReq").isNull()) {
 			error("Parametro idReq non trovato");
 			setResponsePage(ProjectPage.class);
 		}
 		SqlSessionMapper<RequirementMapper> sesReqMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
-		req = sesReqMapper.getMapper().get(BigInteger.valueOf(params.getInt("idReq")));
+		req = sesReqMapper.getMapper().get(BigInteger.valueOf(params.get("idReq").toInt()));
 		req.setOldId(req.getId());
 		
 		//recupero il tipo
@@ -60,7 +61,7 @@ public class UpdateRequirementPage extends LayoutPage implements Serializable {
 		dependencies.addAll(sesReqMapper.getMapper().getDependencies(req.getId()));
 		origDependencies.addAll(dependencies);
 
-		BookmarkablePageLink<Void> requirementLnk = new BookmarkablePageLink<Void>("requirementLnk",RequirementPage.class,new PageParameters("idReq="+req.getId()));
+		BookmarkablePageLink<Void> requirementLnk = new BookmarkablePageLink<Void>("requirementLnk",RequirementPage.class,new PageParameters().add("idReq",req.getId()));
 		requirementLnk.add(new Label("requirementName", req.getName()));
 		add(requirementLnk);
 
@@ -129,7 +130,7 @@ public class UpdateRequirementPage extends LayoutPage implements Serializable {
 					dependencies.addAll(origDependencies);
 				}
 				sesMapper.close();
-				ajaxTarget.addComponent(dependencyFld);
+				ajaxTarget.add(dependencyFld);
 			}
 		});
 		updForm.add(typeFld);

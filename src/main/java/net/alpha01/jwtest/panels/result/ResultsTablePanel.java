@@ -26,7 +26,6 @@ import net.alpha01.jwtest.util.GenericComparator;
 import net.alpha01.jwtest.util.JWTestUtil;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -35,6 +34,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolb
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
@@ -43,6 +43,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class ResultsTablePanel extends Panel {
 	private static final long serialVersionUID = 8036026895705971305L;
@@ -54,7 +55,7 @@ public class ResultsTablePanel extends Panel {
 
 		public ResultDataTable(int idSession) {
 			this.idSession = idSession;
-			setSort("id", true);
+			setSort(new SortParam("id", true));
 		}
 
 		@Override
@@ -138,7 +139,7 @@ public class ResultsTablePanel extends Panel {
 
 			@Override
 			public void populateItem(Item<ICellPopulator<Result>> item, String contentId, IModel<Result> model) {
-				item.add(new PanelLink(contentId, model.getObject().getId().toString(), ResultPage.class, new PageParameters("idResult=" + model.getObject().getId().intValue())));
+				item.add(new PanelLink(contentId, model.getObject().getId().toString(), ResultPage.class, new PageParameters().add("idResult", model.getObject().getId().intValue())));
 			}
 		});
 		if (full) {
@@ -148,7 +149,7 @@ public class ResultsTablePanel extends Panel {
 				@Override
 				public void populateItem(Item<ICellPopulator<Result>> item, String contentId, IModel<Result> model) {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-					item.add(new PanelLink(contentId, sdf.format(model.getObject().getSession().getStart_date()), SessionsPage.class, new PageParameters("idSession=" + model.getObject().getId_session().toString())));
+					item.add(new PanelLink(contentId, sdf.format(model.getObject().getSession().getStart_date()), SessionsPage.class, new PageParameters().add("idSession", model.getObject().getId_session().toString())));
 				}
 			});
 			columns.add(new DatePropertyColumn<Result>(new StringResourceModel("end_date", this, null), "session.end_date", "yyyy-MM-dd-HH:mm"));
@@ -159,7 +160,7 @@ public class ResultsTablePanel extends Panel {
 
 				@Override
 				public void populateItem(Item<ICellPopulator<Result>> item, String contentId, IModel<Result> model) {
-					item.add(new PanelLink(contentId, model.getObject().getTestCase().toString(), TestCasePage.class, new PageParameters("idTest=" + model.getObject().getId_testcase().intValue())));
+					item.add(new PanelLink(contentId, model.getObject().getTestCase().toString(), TestCasePage.class, new PageParameters().add("idTest", model.getObject().getId_testcase().intValue())));
 				}
 
 				@Override
@@ -206,7 +207,7 @@ public class ResultsTablePanel extends Panel {
 				@Override
 				public void populateItem(Item<ICellPopulator<Result>> item, String contentId, IModel<Result> model) {
 					if (model.getObject().getSession().isOpened() && model.getObject().getId_parent() == null) {
-						item.add(new PanelLink(contentId, JWTestUtil.translate("recycle", ResultsTablePanel.this), AddResultPage.class, new PageParameters("idParent=" + model.getObject().getId())));
+						item.add(new PanelLink(contentId, JWTestUtil.translate("recycle", ResultsTablePanel.this), AddResultPage.class, new PageParameters().add("idParent", model.getObject().getId())));
 					} else {
 						item.add(new EmptyPanel(contentId));
 					}
@@ -243,8 +244,7 @@ public class ResultsTablePanel extends Panel {
 				}
 			});
 		}
-		@SuppressWarnings("unchecked")
-		DataTable<Result> resultsDataTable = new DataTableAlternatedRows<Result>("resultsDataTable", columns.toArray(new IColumn[0]), dataProvider, numRows);
+		DataTable<Result> resultsDataTable = new DataTableAlternatedRows<Result>("resultsDataTable", columns, dataProvider, numRows);
 		resultsDataTable.addTopToolbar(new HeadersToolbar(resultsDataTable, dataProvider));
 		resultsDataTable.addBottomToolbar(new NavigationToolbar(resultsDataTable));
 		add(resultsDataTable);

@@ -22,9 +22,8 @@ import net.alpha01.jwtest.panels.step.StepsTablePanel;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -38,10 +37,12 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 
 @AuthorizeInstantiation(value = { Roles.ADMIN, "PROJECT_ADMIN", "TESTER", "MANAGER" })
 public class AddResultPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private Result result = new Result();
 	private Result parent;
 	private BigInteger idTest;
@@ -50,23 +51,23 @@ public class AddResultPage extends LayoutPage {
 
 	public AddResultPage(PageParameters params) {
 		super(params);
-		if (!params.containsKey("idTest") && !params.containsKey("idParent")) {
+		if (params.get("idTest").isNull() && params.get("idParent").isNull()) {
 			error("parameter idTest not found");
 			Logger.getLogger(getClass()).error("parameter idTest not found");
 			setResponsePage(SessionsPage.class);
 		}
 		// retreive testCase information
 		SqlSessionMapper<TestCaseMapper> sesTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
-		if (params.containsKey("idParent")){
+		if (!params.get("idParent").isNull()){
 			ResultMapper resMapper = sesTestMapper.getSqlSession().getMapper(ResultMapper.class);
-			parent=resMapper.get(BigInteger.valueOf(params.getAsInteger("idParent")));
+			parent=resMapper.get(BigInteger.valueOf(params.get("idParent").toLong()));
 			idTest=parent.getTestCase().getId();
 			result.setId_parent(parent.getId());
 			result.setId_testcase(idTest);
 			result.setId_session(parent.getSession().getId());
 		}else{
-			idTest=BigInteger.valueOf(params.getAsInteger("idTest"));
-			result.setId_testcase(BigInteger.valueOf(params.getAsInteger("idTest")));
+			idTest=BigInteger.valueOf(params.get("idTest").toLong());
+			result.setId_testcase(BigInteger.valueOf(params.get("idTest").toLong()));
 			result.setId_session(getSession().getCurrentSession().getId());	
 		}
 		
@@ -74,7 +75,7 @@ public class AddResultPage extends LayoutPage {
 		final TestCase testCase = sesTestMapper.getMapper().get(result.getId_testcase());
 		sesTestMapper.close();
 
-		BookmarkablePageLink<String> reqLnk = new BookmarkablePageLink<String>("reqLnk", RequirementPage.class, new PageParameters("idReq=" + testCase.getId_requirement()));
+		BookmarkablePageLink<String> reqLnk = new BookmarkablePageLink<String>("reqLnk", RequirementPage.class, new PageParameters().add("idReq" , testCase.getId_requirement()));
 		reqLnk.add(new Label("reqName", testCase.getRequirement().getName()));
 		add(reqLnk);
 
@@ -114,7 +115,7 @@ public class AddResultPage extends LayoutPage {
 						List<TestCase> testcases = testMapper.getAllUncheckedBySession(AddResultPage.this.getSession().getCurrentSession().getId());
 						if (testcases.size()>0){
 							//go to next testcase
-							setResponsePage(AddResultPage.class,new PageParameters("idTest="+testcases.get(0).getId()));
+							setResponsePage(AddResultPage.class,new PageParameters().add("idTest",testcases.get(0).getId()));
 						}else{
 							//return to session main page
 							setResponsePage(SessionsPage.class);
@@ -141,7 +142,7 @@ public class AddResultPage extends LayoutPage {
 				Logger.getLogger(getClass()).debug("Test skipped");
 				if (currTestPos!=-1 && (testcases.size()-1)>currTestPos){
 					//go to next testcase
-					setResponsePage(AddResultPage.class,new PageParameters("idTest="+testcases.get(currTestPos+1).getId()));
+					setResponsePage(AddResultPage.class,new PageParameters().add("idTest",testcases.get(currTestPos+1).getId()));
 				}else{
 					//return to session main page
 					setResponsePage(SessionsPage.class);

@@ -1,15 +1,14 @@
 package net.alpha01.jwtest.pages.project;
 
 import net.alpha01.jwtest.beans.Project;
-
 import net.alpha01.jwtest.dao.ProjectMapper;
-import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
+import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.pages.HomePage;
 import net.alpha01.jwtest.pages.LayoutPage;
 
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;

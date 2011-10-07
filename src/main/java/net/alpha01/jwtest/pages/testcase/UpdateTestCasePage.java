@@ -15,9 +15,8 @@ import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.panels.attachment.AddAttachmentPanel;
 import net.alpha01.jwtest.util.TestCaseUtil;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
@@ -26,22 +25,24 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN","MANAGER"})
 public class UpdateTestCasePage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private TestCase testCase = new TestCase();
 	private ArrayList<TestCase> dependencies=new ArrayList<TestCase>();
 
 	public UpdateTestCasePage(final PageParameters params) {
 		super(params);
-		if (!params.containsKey("idTest")) {
+		if (params.get("idTest").isNull()) {
 			error("Parametro idTest non trovato");
 			setResponsePage(ProjectPage.class);
 		}
 		TestCaseMapper testMapper = SqlConnection.getMapper(TestCaseMapper.class);
-		testCase = testMapper.get(BigInteger.valueOf(params.getInt("idTest")));
+		testCase = testMapper.get(BigInteger.valueOf(params.get("idTest").toInt()));
 		dependencies=(ArrayList<TestCase>) testMapper.getDependencies(testCase.getId());
 
-		BookmarkablePageLink<Void> testcaseLnk=new BookmarkablePageLink<Void>("testcaseLnk", TestCasePage.class, new PageParameters("idTest="+testCase.getId()));
+		BookmarkablePageLink<Void> testcaseLnk=new BookmarkablePageLink<Void>("testcaseLnk", TestCasePage.class, new PageParameters().add("idTest",testCase.getId()));
 		testcaseLnk.add(new Label("testcaseName", testCase.getName()));
 		add(testcaseLnk);
 		
@@ -52,7 +53,7 @@ public class UpdateTestCasePage extends LayoutPage {
 			protected void onSubmit() {
 				try{
 					TestCaseUtil.updateTestCase(testCase,dependencies);
-					setResponsePage(TestCasePage.class, new PageParameters("idTest="+testCase.getId().toString()));
+					setResponsePage(TestCasePage.class, new PageParameters().add("idTest",testCase.getId().toString()));
 				}catch (JWTestException e){
 					error(e.getMessage());
 				}

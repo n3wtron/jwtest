@@ -3,8 +3,8 @@ package net.alpha01.jwtest.dao;
 import java.math.BigInteger;
 import java.util.List;
 
-import net.alpha01.jwtest.beans.Role;
 import net.alpha01.jwtest.beans.Project;
+import net.alpha01.jwtest.beans.Role;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 

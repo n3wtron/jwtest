@@ -10,25 +10,26 @@ import net.alpha01.jwtest.dao.UserMapper;
 import net.alpha01.jwtest.pages.HomePage;
 import net.alpha01.jwtest.pages.LayoutPage;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 @AuthorizeInstantiation(value = Roles.ADMIN)
 public class DeleteUserPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private User user;
 
 	public DeleteUserPage(final PageParameters params) {
 		super(params);
-		if (!params.containsKey("idUser")) {
+		if (params.get("idUser").isNull()) {
 			error("Parametro idUser non trovato");
 			setResponsePage(HomePage.class);
 		}
 		SqlSessionMapper<UserMapper> sesUserMapper = SqlConnection.getSessionMapper(UserMapper.class);
-		user = sesUserMapper.getMapper().getById(BigInteger.valueOf(params.getInt("idUser")));
+		user = sesUserMapper.getMapper().getById(BigInteger.valueOf(params.get("idUser").toLong()));
 		sesUserMapper.close();
 		add(new Label("userName", user.getUsername()));
 		Form<Project> delUserForm = new Form<Project>("delUserForm");

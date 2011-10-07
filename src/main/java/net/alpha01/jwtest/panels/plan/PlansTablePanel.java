@@ -1,5 +1,6 @@
 package net.alpha01.jwtest.panels.plan;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.pages.plan.PlanPage;
 import net.alpha01.jwtest.panels.PanelLink;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -26,6 +26,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class PlansTablePanel extends Panel{
 	private static final long serialVersionUID = 1L;
@@ -81,23 +82,22 @@ public class PlansTablePanel extends Panel{
 	}
 	
 	private void createTable(PlanDataTable dataProvider,int rows){
-		@SuppressWarnings("unchecked")
-		IColumn<Plan>[] columns=new IColumn[5];
-		columns[0]=new PropertyColumn<Plan>(new Model<String>("ID"), "id");
+		List<IColumn<Plan>> columns=new ArrayList<IColumn<Plan>>();
+		columns.add(new PropertyColumn<Plan>(new Model<String>("ID"), "id"));
 		//columns[1]=new PropertyColumn<Plan>(new StringResourceModel("name", this, null), "name");
-		columns[1]=new AbstractColumn<Plan>(new StringResourceModel("name", this, null)) {
+		columns.add(new AbstractColumn<Plan>(new StringResourceModel("name", this, null)) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void populateItem(Item<ICellPopulator<Plan>> item, String contentId, IModel<Plan> model) {
 				PageParameters params =new PageParameters();
-				params.put("idPlan",model.getObject().getId());
+				params.add("idPlan",model.getObject().getId());
 				item.add(new PanelLink(contentId, model.getObject().getName(), PlanPage.class, params));
 			}
-		};
-		columns[2]=new DatePropertyColumn<Plan>(new StringResourceModel("date", this, null), "creation_date","dd-MM-yyyy HH:mm");
-		columns[3]=new PropertyColumn<Plan>(new StringResourceModel("session.num", this, null), "nSessions");
-		columns[4]=new PropertyColumn<Plan>(new StringResourceModel("test.num", this, null), "nTests");
+		});
+		columns.add(new DatePropertyColumn<Plan>(new StringResourceModel("date", this, null), "creation_date","dd-MM-yyyy HH:mm"));
+		columns.add(new PropertyColumn<Plan>(new StringResourceModel("session.num", this, null), "nSessions"));
+		columns.add(new PropertyColumn<Plan>(new StringResourceModel("test.num", this, null), "nTests"));
 		DataTable<Plan> plansDataTable=new DataTableAlternatedRows<Plan>("plansDataTable", columns, dataProvider, rows);
 		plansDataTable.addTopToolbar(new HeadersToolbar(plansDataTable, dataProvider));
 		plansDataTable.addBottomToolbar(new NavigationToolbar(plansDataTable));

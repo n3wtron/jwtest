@@ -13,11 +13,9 @@ import net.alpha01.jwtest.panels.LogoutPanel;
 import net.alpha01.jwtest.panels.MainMenuPanel;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.behavior.StringHeaderContributor;
-import org.apache.wicket.markup.html.CSSPackageResource;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -26,8 +24,11 @@ import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class LayoutPage extends WebPage{
+	private static final long serialVersionUID = 1L;
 	private Model<Project> currPrj=new Model<Project>(getSession().getCurrentProject());
 	private Label currProjectNameLabel;
 	public LayoutPage(){
@@ -40,12 +41,16 @@ public class LayoutPage extends WebPage{
 		generateLayout();
 	}
 	
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
+		String contextPath = getRequestCycle().getRequest().getContextPath();
+		response.renderCSSReference(new PackageResourceReference(LayoutPage.class,"style.css"));
+		response.renderString("<link rel=\"icon\" href=\""+contextPath+"/images/icon.png\" type=\"image/png\"/>");
+	}
+	
 	public void generateLayout(){
-		add(CSSPackageResource.getHeaderContribution("css/style.css"));
-		String contextPath = getWebRequestCycle().getWebRequest().getHttpServletRequest().getContextPath();
-		add(new StringHeaderContributor("<link rel=\"icon\" href=\""+contextPath+"/images/icon.png\" type=\"image/png\"/>"));
 		add(new ContextImage("icon", "images/icon.png"));
-		
 		// Form per la scelta del progetto
 		Form<Project> projectForm = new Form<Project>("projectForm");
 		SqlSessionMapper<ProjectMapper> sesMapper=SqlConnection.getSessionMapper(ProjectMapper.class);
@@ -61,7 +66,7 @@ public class LayoutPage extends WebPage{
 				getSession().setCurrentProject(currPrj.getObject());
 				getSession().setCurrentSession(null);
 				Logger.getLogger(getClass()).debug("selezionato progetto:"+currPrj.getObject());
-				target.addComponent(currProjectNameLabel);
+				target.add(currProjectNameLabel);
 				setResponsePage(ProjectPage.class);
 			}
 		});

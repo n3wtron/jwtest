@@ -1,5 +1,6 @@
 package net.alpha01.jwtest.pages.user;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,9 +12,8 @@ import net.alpha01.jwtest.dao.UserMapper;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.panels.PanelLink;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -26,10 +26,12 @@ import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 @AuthorizeInstantiation(value=Roles.ADMIN)
 public class UsersPage extends LayoutPage{
-	
+	private static final long serialVersionUID = 1L;
+
 	class UsersDataProvider extends SortableDataProvider<User>{
 		private static final long serialVersionUID = 1L;
 		private List<User> users;
@@ -61,28 +63,27 @@ public class UsersPage extends LayoutPage{
 		
 		
 		UsersDataProvider dataProvider = new UsersDataProvider();
-		@SuppressWarnings("unchecked")
-		IColumn<User>[] columns = new IColumn[6];
-		columns[0] = new PropertyColumn<User>(new Model<String>("ID"),"id");
-		columns[1] = new PropertyColumn<User>(new Model<String>("Username"),"username");
-		columns[2] = new PropertyColumn<User>(new Model<String>("Name"),"name");
-		columns[3] = new PropertyColumn<User>(new Model<String>("Email"),"email");
-		columns[4] = new AbstractColumn<User>(new Model<String>("Update")) {
+		List<IColumn<User>> columns = new ArrayList<IColumn<User>>();
+		columns.add( new PropertyColumn<User>(new Model<String>("ID"),"id"));
+		columns.add( new PropertyColumn<User>(new Model<String>("Username"),"username"));
+		columns.add( new PropertyColumn<User>(new Model<String>("Name"),"name"));
+		columns.add( new PropertyColumn<User>(new Model<String>("Email"),"email"));
+		columns.add( new AbstractColumn<User>(new Model<String>("Update")) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void populateItem(Item<ICellPopulator<User>> item, String contentId, IModel<User> model) {
-				item.add(new PanelLink(contentId,"update",UpdateUserPage.class,new PageParameters("idUser="+model.getObject().getId())));
+				item.add(new PanelLink(contentId,"update",UpdateUserPage.class,new PageParameters().add("idUser",model.getObject().getId())));
 			}
-		};
-		columns[5] = new AbstractColumn<User>(new Model<String>("Delete")) {
+		});
+		columns.add(new AbstractColumn<User>(new Model<String>("Delete")) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void populateItem(Item<ICellPopulator<User>> item, String contentId, IModel<User> model) {
-				item.add(new PanelLink(contentId,"delete",DeleteUserPage.class,new PageParameters("idUser="+model.getObject().getId())));
+				item.add(new PanelLink(contentId,"delete",DeleteUserPage.class,new PageParameters().add("idUser",model.getObject().getId())));
 			}
-		};
+		});
 		DataTable<User> usersTable = new DataTable<User>("usersTable", columns, dataProvider, 15);
 		usersTable.addTopToolbar(new HeadersToolbar(usersTable, dataProvider));
 		usersTable.addBottomToolbar(new NavigationToolbar(usersTable));

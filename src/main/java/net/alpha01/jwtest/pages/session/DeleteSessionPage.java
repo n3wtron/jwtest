@@ -10,24 +10,25 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.util.JWTestUtil;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN","MANAGER"})
 public class DeleteSessionPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private Session ses;
 	public DeleteSessionPage(PageParameters params){
 		super(params);
-		if (!params.containsKey("idSession")) {
+		if (params.get("idSession").isNull()) {
 			error("Parametro idSession non trovato");
 			setResponsePage(SessionsPage.class);
 		}
 		SqlSessionMapper<SessionMapper> sesTestMapper = SqlConnection.getSessionMapper(SessionMapper.class);
-		ses=sesTestMapper.getMapper().get(BigInteger.valueOf(params.getAsInteger("idSession")));
+		ses=sesTestMapper.getMapper().get(BigInteger.valueOf(params.get("idSession").toLong()));
 		add (new Label("sessionName",ses.toString()));
 		Form<Project> delSessionForm = new Form<Project>("delSessionForm");
 		delSessionForm.add(new Button("YesBtn"){

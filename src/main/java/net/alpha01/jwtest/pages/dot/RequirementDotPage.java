@@ -7,6 +7,8 @@ import net.alpha01.jwtest.panels.DotPanel;
 import org.apache.wicket.markup.html.WebPage;
 
 public class RequirementDotPage extends WebPage{
+	private static final long serialVersionUID = 1L;
+
 	public RequirementDotPage(){
 		//DOT GRAPH
 		RequirementGraphResource resource= new RequirementGraphResource("reqName",((JWTestSession)JWTestSession.get()).getCurrentProject().getId());

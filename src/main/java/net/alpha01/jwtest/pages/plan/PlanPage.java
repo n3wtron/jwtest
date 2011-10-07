@@ -17,22 +17,24 @@ import net.alpha01.jwtest.panels.session.SessionTablePanel;
 import net.alpha01.jwtest.panels.testcase.TestCasesTablePanel;
 import net.alpha01.jwtest.util.JWTestUtil;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.ContextImage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class PlanPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
+
 	public PlanPage(PageParameters params) {
 		super(params);
-		if (!params.containsKey("idPlan")) {
+		if (params.get("idPlan").isNull()) {
 			setResponsePage(HomePage.class);
 			error("Error idPlan parameter not found");
 			return;
 		}
 		SqlSessionMapper<TestCaseMapper> sesTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
 		PlanMapper planMapper = sesTestMapper.getSqlSession().getMapper(PlanMapper.class);
-		Plan plan = planMapper.get(BigInteger.valueOf(params.getAsInteger("idPlan")));
+		Plan plan = planMapper.get(BigInteger.valueOf(params.get("idPlan").toLong()));
 		String planName=plan.getName();
 		if (plan.getNew_version().equals(BigInteger.ZERO)) {
 			add(new BookmarkablePageLinkSecure<String>("updatePlanLnk", UpdatePlanPage.class, params, Roles.ADMIN, "PROJECT_ADMIN", "MANAGER").add(new ContextImage("updatePlanImg", "images/update_plan.png")));

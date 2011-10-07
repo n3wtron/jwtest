@@ -3,7 +3,7 @@ package net.alpha01.jwtest.pages;
 
 import java.io.IOException;
 
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class HomePage extends LayoutPage {
 

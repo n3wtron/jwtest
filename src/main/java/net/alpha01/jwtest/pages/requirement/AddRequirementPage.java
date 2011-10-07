@@ -13,16 +13,15 @@ import net.alpha01.jwtest.beans.RequirementType;
 import net.alpha01.jwtest.dao.RequirementMapper;
 import net.alpha01.jwtest.dao.RequirementMapper.Dependency;
 import net.alpha01.jwtest.dao.RequirementMapper.RequirementSelectSort;
-import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
+import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.pages.LayoutPage;
 
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -31,9 +30,11 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 @AuthorizeInstantiation(value = { Roles.ADMIN, "PROJECT_ADMIN", "TESTER", "MANAGER" })
 public class AddRequirementPage extends LayoutPage implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Requirement req = new Requirement();
 	private Model<RequirementType> typeModel = new Model<RequirementType>(new RequirementType());
 	private ArrayList<Requirement> dependencies = new ArrayList<Requirement>();
@@ -67,7 +68,7 @@ public class AddRequirementPage extends LayoutPage implements Serializable {
 						sesAddMapper.commit();
 						sesAddMapper.close();
 						info("Requirement added successfully");
-						setResponsePage(AddRequirementPage.class,new PageParameters("currType="+typeModel.getObject().getId()));
+						setResponsePage(AddRequirementPage.class, new PageParameters().add("currType", typeModel.getObject().getId()));
 					} else {
 						error("SQL ERROR :Requirement not addedd");
 					}
@@ -89,8 +90,8 @@ public class AddRequirementPage extends LayoutPage implements Serializable {
 		numFld.setOutputMarkupId(true);
 		numFld.setRequired(true);
 
-		if (params.containsKey("currType")) {
-			RequirementType prevType = sesMapper.getMapper().getType(BigInteger.valueOf(params.getAsInteger("currType")));
+		if (!params.get("currType").isNull()) {
+			RequirementType prevType = sesMapper.getMapper().getType(BigInteger.valueOf(params.get("currType").toLong()));
 			typeModel.setObject(prevType);
 			refreshDependencies(null);
 		}
@@ -126,8 +127,8 @@ public class AddRequirementPage extends LayoutPage implements Serializable {
 
 		sesMapper.close();
 		if (ajaxTarget != null) {
-			ajaxTarget.addComponent(dependencyFld);
-			ajaxTarget.addComponent(numFld);
+			ajaxTarget.add(dependencyFld);
+			ajaxTarget.add(numFld);
 		}
 	}
 }

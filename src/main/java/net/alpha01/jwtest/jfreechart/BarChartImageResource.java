@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.IResource;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -59,7 +60,7 @@ public class BarChartImageResource extends DynamicImageResource {
 	}
 
 	@Override
-	protected byte[] getImageData() {
+	protected byte[] getImageData(IResource.Attributes attributes) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			ChartUtilities.writeBufferedImageAsPNG(out, chart.createBufferedImage(width, height));

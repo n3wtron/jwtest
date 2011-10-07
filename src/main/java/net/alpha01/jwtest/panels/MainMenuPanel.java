@@ -7,7 +7,7 @@ import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.pages.session.SessionsPage;
 import net.alpha01.jwtest.pages.user.UsersPage;
 
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;

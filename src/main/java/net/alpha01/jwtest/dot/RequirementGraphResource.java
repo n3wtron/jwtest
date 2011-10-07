@@ -6,13 +6,13 @@ import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.protocol.http.WebApplication;
-
 import net.alpha01.jwtest.beans.Requirement;
 import net.alpha01.jwtest.dao.RequirementMapper;
 import net.alpha01.jwtest.dao.RequirementMapper.RequirementSelectSort;
-import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
+import net.alpha01.jwtest.dao.SqlSessionMapper;
+
+import org.apache.wicket.protocol.http.WebApplication;
 
 public class RequirementGraphResource extends AbstractGraphResource {
 	private static final long serialVersionUID = 1L;

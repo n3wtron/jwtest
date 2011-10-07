@@ -31,21 +31,23 @@ import net.alpha01.jwtest.util.JWTestUtil;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.ContextImage;
-import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.DynamicImageResource;
 
 public class RequirementPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
+
 	private Requirement req;
 
 	private Model<Requirement> destinationReqModel = new Model<Requirement>();
@@ -54,7 +56,7 @@ public class RequirementPage extends LayoutPage {
 	public RequirementPage(PageParameters params) {
 		super(params);
 		SqlSessionMapper<RequirementMapper> sesReqMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
-		req = sesReqMapper.getMapper().get(BigInteger.valueOf(params.getAsInteger("idReq")));
+		req = sesReqMapper.getMapper().get(BigInteger.valueOf(params.get("idReq").toLong()));
 
 		// LABELS
 		add(new Label("requirementName", new PropertyModel<String>(req, "name")));
@@ -308,7 +310,7 @@ public class RequirementPage extends LayoutPage {
 		
 		
 		//DOT LINK
-		testsForm.add(new BookmarkablePageLink<String>("dotGraphLnk",TestCaseDotPage.class,new PageParameters("idReq="+req.getId())));
+		testsForm.add(new BookmarkablePageLink<String>("dotGraphLnk",TestCaseDotPage.class,new PageParameters().add("idReq",req.getId())));
 		add(testsForm);
 		
 	}

@@ -4,14 +4,11 @@
 	<groupId>net.alpha01</groupId>
 	<artifactId>jwtest</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<!-- TODO project name  -->
-	<name>quickstart</name>
+	<name>jwtest</name>
 	<description></description>
-	<!--
-		TODO <organization> <name>company name</name> <url>company url</url>
-		</organization>
-	-->
+	
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -20,18 +17,13 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>1.4.17</wicket.version>
+		<wicket.version>1.5.1</wicket.version>
 		<jetty.version>6.1.25</jetty.version>
 		<slf4j.version>1.5.8</slf4j.version>
 		<log4j.version>1.2.14</log4j.version>
 	</properties>
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket</artifactId>
-			<version>${wicket.version}</version>
-		</dependency>
 		<!--
 			OPTIONAL <dependency> <groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
@@ -92,20 +84,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-			<version>1.4.17</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-auth-roles</artifactId>
-			<version>1.4.17</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.6</version>
@@ -120,13 +98,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-datetime</artifactId>
-			<version>1.4.17</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>2.1</version>
@@ -137,6 +108,34 @@
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.1.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+			<version>${wicket.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+			<version>${wicket.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-datetime</artifactId>
+			<version>${wicket.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-auth-roles</artifactId>
+			<version>${wicket.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

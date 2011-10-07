@@ -35,8 +35,7 @@ import net.alpha01.jwtest.util.JWTestUtil;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -45,20 +44,22 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class TestCasePage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private TestCase test;
 	private HashMap<Step, Model<Boolean>> selectedStep = new HashMap<Step, Model<Boolean>>();
 	private Model<HashMap<Step, Model<Boolean>>> selecteStepModel = new Model<HashMap<Step, Model<Boolean>>>(selectedStep);
 
 	public TestCasePage(PageParameters params) {
 		super(params);
-		if (!params.containsKey("idTest")) {
+		if (params.get("idTest").isNull()) {
 			error("Parametro idTest non trovato");
 			setResponsePage(ProjectPage.class);
 		}
 		SqlSessionMapper<TestCaseMapper> sesTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
-		test = sesTestMapper.getMapper().getStat(BigInteger.valueOf(params.getInt("idTest")));
+		test = sesTestMapper.getMapper().getStat(BigInteger.valueOf(params.get("idTest").toLong()));
 		String testCaseName=test.getName();
 		if (!test.getNew_version().equals(BigInteger.ZERO)){
 			testCaseName+=" ["+JWTestUtil.translate("obsolete", this)+"]";
@@ -72,14 +73,14 @@ public class TestCasePage extends LayoutPage {
 		Requirement req = reqMapper.get(test.getId_requirement());
 
 		PageParameters reqParams = new PageParameters();
-		reqParams.put("idReq", req.getId());
+		reqParams.add("idReq", req.getId());
 		BookmarkablePageLink<String> requirementLnk = new BookmarkablePageLink<String>("requirementLnk", RequirementPage.class, reqParams);
 		requirementLnk.add(new Label("requirementName", req.getName()));
 		add(requirementLnk);
 
 		// LINKS
 		PageParameters lnkParam = new PageParameters();
-		lnkParam.put("idTest", test.getId());
+		lnkParam.add("idTest", test.getId());
 		if (test.getNew_version().equals(BigInteger.ZERO)){
 			add(new BookmarkablePageLinkSecure<String>("addStepLnk", AddStepPage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("addStepImg", "images/add_step.png")));
 			add(new BookmarkablePageLinkSecure<String>("updTestLnk", UpdateTestCasePage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("updateTestImg", "images/update_test.png")));
@@ -117,7 +118,7 @@ public class TestCasePage extends LayoutPage {
 			graphColors.put("FAILED", Color.RED);
 			add(new Image("chartImage", new PieChartImageResource(null, graphValues, graphColors, 500, 300)));
 		} else {
-			add(new Image("chartImage").setVisible(false));
+			add(new Image("chartImage","chartImage").setVisible(false));
 		}
 
 		final Model<Boolean> updatePermission=JWTestUtil.isAuthorized(Roles.ADMIN,"PROJECT_ADMIN","MANAGER");

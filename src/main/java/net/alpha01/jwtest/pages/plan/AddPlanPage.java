@@ -21,8 +21,8 @@ import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.panels.DoubleMultipleChoicePanel;
 
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
@@ -31,6 +31,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN","MANAGER"})
 public class AddPlanPage extends LayoutPage{
+	private static final long serialVersionUID = 1L;
 	private Plan plan=new Plan();
 	private ArrayList<TestCase> testCases=new ArrayList<TestCase>();
 	private ArrayList<Requirement> selReqs=new ArrayList<Requirement>();

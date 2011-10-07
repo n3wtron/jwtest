@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.alpha01.jwtest.beans.TestCase;
-import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
+import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper.TestCaseSelectSort;
 

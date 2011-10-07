@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import net.alpha01.jwtest.beans.Role;
 import net.alpha01.jwtest.beans.Project;
+import net.alpha01.jwtest.beans.Role;
 import net.alpha01.jwtest.beans.Session;
 import net.alpha01.jwtest.beans.User;
 import net.alpha01.jwtest.dao.ProjectMapper;
@@ -16,9 +16,9 @@ import net.alpha01.jwtest.dao.UserMapper;
 import net.alpha01.jwtest.util.JWTestConfig;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.Request;
-import org.apache.wicket.authentication.AuthenticatedWebSession;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.request.Request;
 
 public class JWTestSession extends AuthenticatedWebSession {
 	private static final long serialVersionUID = -625809801878692512L;

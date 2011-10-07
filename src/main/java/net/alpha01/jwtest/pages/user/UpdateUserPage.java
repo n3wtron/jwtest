@@ -18,11 +18,10 @@ import net.alpha01.jwtest.util.JWTestConfig;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -31,6 +30,7 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
@@ -38,17 +38,18 @@ import org.apache.wicket.validation.validator.StringValidator;
 
 @AuthorizeInstantiation(value = Roles.ADMIN)
 public class UpdateUserPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private User user;
 	private ArrayList<Role> selectedGroups;
 
 	public UpdateUserPage(PageParameters params) {
 		super(params);
-		if (!params.containsKey("idUser")) {
+		if (params.get("idUser").isNull()) {
 			error("Parametro idUser non trovato");
 			setResponsePage(HomePage.class);
 		}
 		SqlSessionMapper<UserMapper> sesUserMapper = SqlConnection.getSessionMapper(UserMapper.class);
-		user= sesUserMapper.getMapper().getById(BigInteger.valueOf(params.getInt("idUser")));
+		user= sesUserMapper.getMapper().getById(BigInteger.valueOf(params.get("idUser").toLong()));
 		user.setPassword(null);
 		selectedGroups=(ArrayList<Role>) sesUserMapper.getMapper().getRoles(user);
 		sesUserMapper.close();

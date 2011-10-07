@@ -17,33 +17,34 @@ import net.alpha01.jwtest.pages.testcase.TestCasePage;
 import net.alpha01.jwtest.util.TestCaseUtil;
 
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 @AuthorizeInstantiation(value = { Roles.ADMIN, "PROJECT_ADMIN", "MANAGER" })
 public class UpdateStepPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private Step step;
 
 	public UpdateStepPage(final PageParameters params) {
 		super(params);
-		if (!params.containsKey("idStep")) {
+		if (params.get("idStep").isNull()) {
 			error("Parameter idStep not found");
 			setResponsePage(ProjectPage.class);
 		}
 		SqlSessionMapper<StepMapper> sesMapper = SqlConnection.getSessionMapper(StepMapper.class);
-		step = sesMapper.getMapper().get(BigInteger.valueOf(params.getInt("idStep")));
+		step = sesMapper.getMapper().get(BigInteger.valueOf(params.get("idStep").toInt()));
 
 		TestCaseMapper testMapper = sesMapper.getSqlSession().getMapper(TestCaseMapper.class);
 		TestCase test = testMapper.get(step.getId_testcase());
 		PageParameters testCaseParam = new PageParameters();
-		testCaseParam.put("idTest", test.getId());
+		testCaseParam.add("idTest", test.getId());
 		BookmarkablePageLink<String> testCaseLnk = new BookmarkablePageLink<String>("testCaseLnk", TestCasePage.class, testCaseParam);
 		testCaseLnk.add(new Label("testCaseName", test.getName()));
 		add(testCaseLnk);
@@ -75,7 +76,7 @@ public class UpdateStepPage extends LayoutPage {
 						sesAddMapper.commit();
 						sesAddMapper.close();
 						PageParameters testParams = new PageParameters();
-						testParams.put("idTest", step.getId_testcase());
+						testParams.add("idTest", step.getId_testcase());
 						setResponsePage(TestCasePage.class, testParams);
 						info("Step Updated");
 					} else {

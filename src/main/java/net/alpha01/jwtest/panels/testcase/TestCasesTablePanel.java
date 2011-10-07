@@ -20,7 +20,6 @@ import net.alpha01.jwtest.pages.testcase.TestCasePage;
 import net.alpha01.jwtest.panels.PanelLink;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -29,6 +28,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.TextFilteredPropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -38,6 +38,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class TestCasesTablePanel extends Panel{
 	private static final long serialVersionUID = 1L;
@@ -84,7 +85,7 @@ public class TestCasesTablePanel extends Panel{
 
 		public TestCaseStatDataProvider(Requirement req) {
 			this.req = req;
-			setSort("name", true);
+			setSort(new SortParam("name", true));
 		}
 
 		@Override
@@ -124,7 +125,7 @@ public class TestCasesTablePanel extends Panel{
 		public TestLink(String id,TestCase test) {
 			super(id);
 			PageParameters params=new PageParameters();
-			params.put("idTest", test.getId().intValue());
+			params.add("idTest", test.getId().intValue());
 			BookmarkablePageLink<String> lnk = new BookmarkablePageLink<String>("testLnk",TestCasePage.class,params);
 			lnk.add(new Label("testCaseName",test.getName()));
 			add(lnk);
@@ -181,14 +182,13 @@ public class TestCasesTablePanel extends Panel{
 				@Override
 				public void populateItem(Item<ICellPopulator<TestCase>> item, String contenId, IModel<TestCase> model) {
 					PageParameters params = new PageParameters();
-					params.put("idTest", model.getObject().getId());
+					params.add("idTest", model.getObject().getId());
 					item.add(new PanelLink(contenId, "run", AddResultPage.class, params));
 				}
 			});
 		}
 		
-		@SuppressWarnings("unchecked")
-		DataTable<TestCase> testcasesTable = new DataTableAlternatedRows<TestCase>("testcasesTable",columnList.toArray(new IColumn[1]) , dataProvider, rows);
+		DataTable<TestCase> testcasesTable = new DataTableAlternatedRows<TestCase>("testcasesTable",columnList, dataProvider, rows);
 		testcasesTable.addTopToolbar(new HeadersToolbar(testcasesTable, dataProvider));
 		testcasesTable.addBottomToolbar(new NavigationToolbar(testcasesTable));
 		add(testcasesTable);
@@ -253,8 +253,7 @@ public class TestCasesTablePanel extends Panel{
 			}
 		});
 		
-		@SuppressWarnings("unchecked")
-		DataTable<TestCase> testcasesTable = new DataTableAlternatedRows<TestCase>("testcasesTable",columnList.toArray(new IColumn[1]) , dataProvider, rows);
+		DataTable<TestCase> testcasesTable = new DataTableAlternatedRows<TestCase>("testcasesTable",columnList, dataProvider, rows);
 		testcasesTable.addTopToolbar(new HeadersToolbar(testcasesTable, dataProvider));
 		testcasesTable.addBottomToolbar(new NavigationToolbar(testcasesTable));
 		add(testcasesTable);
@@ -301,8 +300,7 @@ public class TestCasesTablePanel extends Panel{
 			}
 		});
 		
-		@SuppressWarnings("unchecked")
-		DataTable<TestCase> testcasesTable = new DataTableAlternatedRows<TestCase>("testcasesTable",columnList.toArray(new IColumn[1]) , dataProvider, rows);
+		DataTable<TestCase> testcasesTable = new DataTableAlternatedRows<TestCase>("testcasesTable",columnList, dataProvider, rows);
 		testcasesTable.addTopToolbar(new HeadersToolbar(testcasesTable, dataProvider));
 		testcasesTable.addBottomToolbar(new NavigationToolbar(testcasesTable));
 		add(testcasesTable);

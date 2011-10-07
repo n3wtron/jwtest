@@ -10,7 +10,8 @@ import java.io.StringWriter;
 import net.alpha01.jwtest.util.JWTestConfig;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.markup.html.image.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.DynamicImageResource;
+import org.apache.wicket.request.resource.IResource;
 
 public abstract class AbstractGraphResource extends DynamicImageResource {
 	private static final long serialVersionUID = 1L;
@@ -80,7 +81,7 @@ public abstract class AbstractGraphResource extends DynamicImageResource {
 	}
 
 	@Override
-	protected byte[] getImageData() {
+	protected byte[] getImageData(IResource.Attributes attributes) {
 		if (content!=null){
 			return content;
 		}

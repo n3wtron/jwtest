@@ -4,8 +4,8 @@ import java.math.BigInteger;
 
 import net.alpha01.jwtest.beans.Step;
 import net.alpha01.jwtest.beans.TestCase;
-import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.SqlConnection;
+import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.StepMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
 import net.alpha01.jwtest.pages.LayoutPage;
@@ -14,30 +14,31 @@ import net.alpha01.jwtest.pages.testcase.TestCasePage;
 import net.alpha01.jwtest.panels.step.StepsTablePanel;
 
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN","MANAGER"})
 public class AddStepPage extends LayoutPage{
+	private static final long serialVersionUID = 1L;
 	private TestCase test;
 	private Step step=new Step();
 	public AddStepPage(final PageParameters params){
 		super(params);
-		if (!params.containsKey("idTest")){
+		if (params.get("idTest").isNull()){
 			error("Parameter idTest not found");
 			setResponsePage(ProjectPage.class);
 		}
 		SqlSessionMapper<TestCaseMapper> sesMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
-		test=sesMapper.getMapper().get(BigInteger.valueOf(params.getInt("idTest")));
+		test=sesMapper.getMapper().get(BigInteger.valueOf(params.get("idTest").toInt()));
 		
 		PageParameters testCaseParam = new PageParameters();
-		testCaseParam.put("idTest", test.getId());
+		testCaseParam.add("idTest", test.getId());
 		BookmarkablePageLink<String> testCaseLnk = new BookmarkablePageLink<String>("testCaseLnk",TestCasePage.class,testCaseParam);
 		testCaseLnk.add (new Label("testCaseName",test.getName()));
 		add(testCaseLnk);

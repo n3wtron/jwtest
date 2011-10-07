@@ -60,9 +60,8 @@ public class AttachmentPanel extends Panel {
 		renderTable(attachments, modLink, delLink);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void renderTable(final List<Attachment> attachments, boolean modLink, boolean delLink) {
-		ArrayList<IColumn<Attachment>> columns = new ArrayList<IColumn<Attachment>>();
+		List<IColumn<Attachment>> columns = new ArrayList<IColumn<Attachment>>();
 		columns.add(new AbstractColumn<Attachment>(new StringResourceModel("name", null)) {
 			private static final long serialVersionUID = 1L;
 
@@ -105,14 +104,14 @@ public class AttachmentPanel extends Panel {
 							}
 							attachments.remove(model.getObject());
 							sesMapper.close();
-							target.addComponent(dataTable);
+							target.add(dataTable);
 						}
 					});
 				}
 			});
 		}
 		ListDataProvider<Attachment> dataProvider = new ListDataProvider<Attachment>(attachments);
-		dataTable = new DataTableAlternatedRows<Attachment>("attachmentTable", columns.toArray(new IColumn[0]), dataProvider, attachments.size()+1);
+		dataTable = new DataTableAlternatedRows<Attachment>("attachmentTable", columns, dataProvider, attachments.size()+1);
 		dataTable.addTopToolbar(new HeadersToolbar(dataTable, null));
 		dataTable.setOutputMarkupId(true);
 		dataTable.addTopToolbar(new NoRecordsToolbar(dataTable));

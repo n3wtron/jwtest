@@ -6,7 +6,7 @@ import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.panels.profiles.ProfileTablePanel;
 import net.alpha01.jwtest.util.JWTestUtil;
 
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.image.ContextImage;
 
 public class ProfilesPage extends LayoutPage {

@@ -29,9 +29,8 @@ import net.alpha01.jwtest.reports.SessionReport;
 import net.alpha01.jwtest.util.JWTestUtil;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -42,10 +41,12 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.itextpdf.text.DocumentException;
 
 public class SessionsPage extends LayoutPage {
+	private static final long serialVersionUID = 1L;
 	private Model<Session> sesModel = new Model<Session>(getSession().getCurrentSession());
 	private Session currSession;
 
@@ -57,9 +58,9 @@ public class SessionsPage extends LayoutPage {
 			return;
 		}
 		SqlSessionMapper<SessionMapper> sesMapper = SqlConnection.getSessionMapper(SessionMapper.class);
-		if (params.containsKey("idSession")){
+		if (!params.get("idSession").isNull()){
 			//load session based on idSession parameter
-			currSession=sesMapper.getMapper().get(BigInteger.valueOf(params.getAsInteger("idSession")));
+			currSession=sesMapper.getMapper().get(BigInteger.valueOf(params.get("idSession").toLong()));
 		}
 		if (currSession==null){
 			//load session from WebSession
@@ -76,7 +77,7 @@ public class SessionsPage extends LayoutPage {
 		
 		if (currSession!=null && currSession.getId_plan()!=null){
 			//PLAN LNK
-			BookmarkablePageLink<String> planLnk=new BookmarkablePageLink<String>("planLnk", PlanPage.class,new PageParameters("idPlan="+currSession.getId_plan()));
+			BookmarkablePageLink<String> planLnk=new BookmarkablePageLink<String>("planLnk", PlanPage.class,new PageParameters().add("idPlan",currSession.getId_plan()));
 			Plan plan = sesMapper.getSqlSession().getMapper(PlanMapper.class).get(currSession.getId_plan());
 			planLnk.add(new Label("planName",plan.getName()));
 			add(planLnk);
@@ -172,7 +173,7 @@ public class SessionsPage extends LayoutPage {
 		// Delete Session Link
 		if (currSession != null) {
 			PageParameters delParams = new PageParameters();
-			delParams.put("idSession", currSession.getId());
+			delParams.add("idSession", currSession.getId());
 			add(new BookmarkablePageLinkSecure<String>("delLnk", DeleteSessionPage.class, delParams, Roles.ADMIN, "PROJECT_ADMIN", "MANAGER", "TESTER").add(new ContextImage("delSessionImg", "images/delete_session.png")));
 		} else {
 			add((new BookmarkablePageLink<String>("delLnk", DeleteSessionPage.class).add(new ContextImage("delSessionImg", "images/delete_session.png"))).setVisible(false));

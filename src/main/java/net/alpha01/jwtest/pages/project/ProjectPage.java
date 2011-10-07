@@ -12,7 +12,7 @@ import net.alpha01.jwtest.pages.session.StartSessionPage;
 import net.alpha01.jwtest.panels.plan.PlansTablePanel;
 import net.alpha01.jwtest.panels.requirement.RequirementsTablePanel;
 
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;

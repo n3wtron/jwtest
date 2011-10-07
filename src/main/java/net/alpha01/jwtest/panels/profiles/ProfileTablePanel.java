@@ -18,9 +18,8 @@ import net.alpha01.jwtest.panels.PanelLinkAjaxSecure;
 import net.alpha01.jwtest.panels.PanelLinkSecure;
 import net.alpha01.jwtest.util.JWTestUtil;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -34,6 +33,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class ProfileTablePanel extends Panel {
 	private static final long serialVersionUID = 1L;
@@ -72,8 +72,6 @@ public class ProfileTablePanel extends Panel {
 
 	}
 
-
-	@SuppressWarnings("unchecked")
 	public ProfileTablePanel(String id, Project project, boolean modLink) {
 		super(id);
 		ProfileDataTable dataProvider = new ProfileDataTable(project);
@@ -97,9 +95,9 @@ public class ProfileTablePanel extends Panel {
 				public void populateItem(Item<ICellPopulator<Profile>> item, String contentId, IModel<Profile> model) {
 					if (model.getObject().getId_project()==null){
 						//only ADMIN
-						item.add(new PanelLinkSecure(contentId,JWTestUtil.translate("update", ProfileTablePanel.this),UpdateProfilePage.class, new PageParameters("idProfile="+model.getObject().getId().toString()),Roles.ADMIN));
+						item.add(new PanelLinkSecure(contentId,JWTestUtil.translate("update", ProfileTablePanel.this),UpdateProfilePage.class, new PageParameters().add("idProfile",model.getObject().getId().toString()),Roles.ADMIN));
 					}else{
-						item.add(new PanelLinkSecure(contentId,JWTestUtil.translate("update", ProfileTablePanel.this),UpdateProfilePage.class, new PageParameters("idProfile="+model.getObject().getId().toString()),Roles.ADMIN,"PROJECT_ADMIN"));
+						item.add(new PanelLinkSecure(contentId,JWTestUtil.translate("update", ProfileTablePanel.this),UpdateProfilePage.class, new PageParameters().add("idProfile",model.getObject().getId().toString()),Roles.ADMIN,"PROJECT_ADMIN"));
 					}
 				}
 			});
@@ -130,7 +128,7 @@ public class ProfileTablePanel extends Panel {
 			});
 		}
 		
-		DataTable<Profile> dTable = new DataTableAlternatedRows<Profile>("profileDataTable", columns.toArray(new IColumn[0]), dataProvider, 20);
+		DataTable<Profile> dTable = new DataTableAlternatedRows<Profile>("profileDataTable", columns, dataProvider, 20);
 		dTable.addTopToolbar(new HeadersToolbar(dTable, dataProvider));
 		dTable.addBottomToolbar(new NavigationToolbar(dTable));
 		add(dTable);

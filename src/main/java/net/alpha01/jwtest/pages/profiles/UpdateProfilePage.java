@@ -16,8 +16,7 @@ import net.alpha01.jwtest.util.JWTestUtil;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.log4j.Logger;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -26,22 +25,24 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class UpdateProfilePage extends LayoutPage {
 
+	private static final long serialVersionUID = 1L;
 	private Profile profile;
 	private Model<Project> selectedProject = new Model<Project>();
 
 	public UpdateProfilePage(PageParameters params) {
 		super();
-		if (!params.containsKey("idProfile")){
+		if (params.get("idProfile").isNull()){
 			error("Parameter idProfile not found");
 			setResponsePage(HomePage.class);
 			return;
 		}
 		SqlSessionMapper<ProjectMapper> sesMapper = SqlConnection.getSessionMapper(ProjectMapper.class);
 		ProfileMapper profileMapper =sesMapper.getSqlSession().getMapper(ProfileMapper.class);
-		profile = profileMapper.get(BigInteger.valueOf(params.getAsInteger("idProfile")));
+		profile = profileMapper.get(BigInteger.valueOf(params.get("idProfile").toLong()));
 		add(new Label("profileName", profile.getName()));
 		
 		if (profile.getId_project()!=null){

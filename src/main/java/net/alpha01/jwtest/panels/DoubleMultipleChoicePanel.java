@@ -58,8 +58,14 @@ public class DoubleMultipleChoicePanel<T extends Serializable> extends Panel {
 						leftList.remove(el);
 					}
 				}
-				target.addComponent(leftSel);
-				target.addComponent(rightSel);
+				target.add(leftSel);
+				target.add(rightSel);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget arg0, Form<?> arg1) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
@@ -75,8 +81,13 @@ public class DoubleMultipleChoicePanel<T extends Serializable> extends Panel {
 					Logger.getLogger(getClass()).debug("removed " + el);
 					model.getObject().remove(el);
 				}
-				target.addComponent(leftSel);
-				target.addComponent(rightSel);
+				target.add(leftSel);
+				target.add(rightSel);
+			}
+			@Override
+			protected void onError(AjaxRequestTarget arg0, Form<?> arg1) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		add(selForm);

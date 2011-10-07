@@ -8,12 +8,12 @@ import net.alpha01.jwtest.pages.result.ResultPage;
 import net.alpha01.jwtest.pages.session.SessionsPage;
 import net.alpha01.jwtest.pages.testcase.TestCasePage;
 
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
 import org.apache.wicket.Session;
-import org.apache.wicket.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.authentication.AuthenticatedWebSession;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 
 public class WicketApplication extends AuthenticatedWebApplication {
 
@@ -23,12 +23,12 @@ public class WicketApplication extends AuthenticatedWebApplication {
 	@Override
 	protected void init() {
 		super.init();
-		mountBookmarkablePage("/home", HomePage.class);
-		mountBookmarkablePage("/project", ProjectPage.class);
-		mountBookmarkablePage("/requirement", RequirementPage.class);
-		mountBookmarkablePage("/test", TestCasePage.class);
-		mountBookmarkablePage("/sessions", SessionsPage.class);
-		mountBookmarkablePage("/result", ResultPage.class);
+		mountPage("/home", HomePage.class);
+		mountPage("/project", ProjectPage.class);
+		mountPage("/requirement", RequirementPage.class);
+		mountPage("/test", TestCasePage.class);
+		mountPage("/sessions", SessionsPage.class);
+		mountPage("/result", ResultPage.class);
 		getMarkupSettings().setAutomaticLinking(true);
 		getDebugSettings().setAjaxDebugModeEnabled(false);
 	}
