@@ -7,16 +7,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.alpha01.jwtest.JWTestSession;
+import net.alpha01.jwtest.beans.Project;
 import net.alpha01.jwtest.beans.Requirement;
-import net.alpha01.jwtest.beans.Step;
 import net.alpha01.jwtest.beans.TestCase;
 import net.alpha01.jwtest.component.BookmarkablePageLinkSecure;
 import net.alpha01.jwtest.component.HtmlLabel;
+import net.alpha01.jwtest.dao.ProjectMapper;
 import net.alpha01.jwtest.dao.RequirementMapper;
 import net.alpha01.jwtest.dao.RequirementMapper.RequirementSelectSort;
 import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
-import net.alpha01.jwtest.dao.StepMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper.TestCaseSelectSort;
 import net.alpha01.jwtest.jfreechart.BarChartImageResource;
@@ -28,14 +29,16 @@ import net.alpha01.jwtest.panels.CloseablePanel;
 import net.alpha01.jwtest.panels.attachment.AttachmentPanel;
 import net.alpha01.jwtest.panels.testcase.TestCasesTablePanel;
 import net.alpha01.jwtest.util.JWTestUtil;
+import net.alpha01.jwtest.util.RequirementUtil;
+import net.alpha01.jwtest.util.TestCaseUtil;
 
 import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.log4j.Logger;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
@@ -52,7 +55,8 @@ public class RequirementPage extends LayoutPage {
 
 	private Model<Requirement> destinationReqModel = new Model<Requirement>();
 	private HashMap<TestCase, Model<Boolean>> selectedTests = new HashMap<TestCase, Model<Boolean>>();
-
+	private Model<Project> destCopyMovePrjModel=new Model<Project>();
+	
 	public RequirementPage(PageParameters params) {
 		super(params);
 		SqlSessionMapper<RequirementMapper> sesReqMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
@@ -68,6 +72,29 @@ public class RequirementPage extends LayoutPage {
 		add(new BookmarkablePageLinkSecure<String>("addTestLnk", AddTestCasePage.class, reqParams,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("addTestImg", "images/add_test.png")));
 		add(new BookmarkablePageLinkSecure<String>("delRequirementLnk", DeleteRequirementPage.class, reqParams,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("deleteRequirementImg", "images/delete_requirement.png")));
 		add(new BookmarkablePageLinkSecure<String>("updRequirementLnk", UpdateRequirementPage.class, reqParams,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("updateRequirementImg", "images/update_requirement.png")));
+		
+		//Copy/Move Form
+		Form<Void> copyFrm=new Form<Void>("copyFrm");
+		//Retrieve all projects less current
+		List<Project> allPrj = sesReqMapper.getSqlSession().getMapper(ProjectMapper.class).getAll();
+		allPrj.remove(JWTestSession.getProject());
+		DropDownChoice<Project> prjList = new DropDownChoice<Project>("prjList",destCopyMovePrjModel,allPrj);
+		copyFrm.add(prjList);
+		copyFrm.add(new SubmitLink("copyBtn"){
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void onSubmit() {
+				SqlSessionMapper<RequirementMapper> sesMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
+				if (RequirementUtil.copyRequirement(req, destCopyMovePrjModel.getObject(), sesMapper)){
+					sesMapper.commit();
+				}else{
+					error("SQL Error");
+					sesMapper.rollback();
+				}
+				
+			}
+		});
+		add(copyFrm);
 		
 		// GRAPHS
 		HashMap<String, BigDecimal> dataValues = new HashMap<String, BigDecimal>();
@@ -198,24 +225,17 @@ public class RequirementPage extends LayoutPage {
 				}
 				SqlSessionMapper<TestCaseMapper> sesTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
 				Iterator<Entry<TestCase, Model<Boolean>>> itT = selectedTests.entrySet().iterator();
-				boolean sqlError = false;
+				boolean sqlOk = true;
 				try {
-					while (itT.hasNext() && !sqlError) {
+					while (itT.hasNext() && sqlOk) {
 						Entry<TestCase, Model<Boolean>> testBool = itT.next();
 						if (testBool.getValue().getObject().booleanValue()) {
 							// move test
-							Logger.getLogger(getClass()).debug("destination requirement id:" + destinationReqModel.getObject().getId());
-							testBool.getKey().setId_requirement(destinationReqModel.getObject().getId());
-							if (sesTestMapper.getMapper().update(testBool.getKey()).equals(1)) {
-								info("TestCase " + testBool.getKey().getName() + " updated");
-							} else {
-								// ERROR
-								error("SQL ERROR in " + testBool.getKey().getName());
-								sqlError = true;
-							}
+							sqlOk&=TestCaseUtil.moveTestCase(testBool.getKey(), destinationReqModel.getObject(), sesTestMapper);
 						}
 					}
-					if (sqlError) {
+					if (!sqlOk) {
+						error("SQL Error");
 						sesTestMapper.rollback();
 					} else {
 						sesTestMapper.commit();
@@ -248,39 +268,18 @@ public class RequirementPage extends LayoutPage {
 					return;
 				}
 				SqlSessionMapper<TestCaseMapper> sesTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
-				StepMapper stepMapper = sesTestMapper.getSqlSession().getMapper(StepMapper.class);
+				
 				Iterator<Entry<TestCase, Model<Boolean>>> itT = selectedTests.entrySet().iterator();
-				boolean sqlError = false;
+				boolean sqlOk = true;
 				try {
-					while (itT.hasNext() && !sqlError) {
+					while (itT.hasNext() && sqlOk) {
 						Entry<TestCase, Model<Boolean>> testBool = itT.next();
 						if (testBool.getValue().getObject().booleanValue()) {
 							// copy test
-							//retrieve steps
-							List<Step> steps = stepMapper.getAll(testBool.getKey().getId().intValue());
-							
-							testBool.getKey().setId_requirement(destinationReqModel.getObject().getId());
-							if (sesTestMapper.getMapper().add(testBool.getKey()).equals(1)) {
-								//copying steps
-								for (Step nstep :steps){
-									nstep.setId_testcase(testBool.getKey().getId());
-									if(!stepMapper.add(nstep).equals(1)){
-										sqlError=true;
-									}
-								}
-								if (sqlError){
-									error("ìError copying steps");
-								}else{
-									info("TestCase " + testBool.getKey().getName() + " copied");
-								}
-							} else {
-								// ERROR
-								error("SQL ERROR in " + testBool.getKey().getName());
-								sqlError = true;
-							}
+							sqlOk&=TestCaseUtil.copyTestCase(testBool.getKey(), destinationReqModel.getObject(), sesTestMapper);
 						}
 					}
-					if (sqlError) {
+					if (!sqlOk) {
 						sesTestMapper.rollback();
 					} else {
 						sesTestMapper.commit();

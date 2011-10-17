@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.alpha01.jwtest.beans.Attachment;
+import net.alpha01.jwtest.beans.Requirement;
 import net.alpha01.jwtest.beans.Result;
 import net.alpha01.jwtest.beans.Step;
 import net.alpha01.jwtest.beans.TestCase;
@@ -24,13 +25,47 @@ import org.apache.log4j.Logger;
 
 public class TestCaseUtil {
 
+	public static boolean moveTestCase(TestCase test,Requirement dest, SqlSessionMapper<?> sqlConn) {
+		// move test
+		TestCaseMapper testMapper=sqlConn.getSqlSession().getMapper(TestCaseMapper.class);
+		test.setId_requirement(dest.getId());
+		if (!testMapper.update(test).equals(1)) {
+			// ERROR
+			Logger.getLogger(TestCaseUtil.class).error("SQL ERROR in " + test.getName());
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean copyTestCase(TestCase test,Requirement dest, SqlSessionMapper<?> sqlConn){
+		//retrieve steps
+		StepMapper stepMapper = sqlConn.getSqlSession().getMapper(StepMapper.class);
+		TestCaseMapper testMapper=sqlConn.getSqlSession().getMapper(TestCaseMapper.class);
+		List<Step> steps = stepMapper.getAll(test.getId().intValue());
+		test.setId_requirement(dest.getId());
+		if (testMapper.add(test).equals(1)) {
+			//copying steps
+			for (Step nstep :steps){
+				nstep.setId_testcase(test.getId());
+				if(!stepMapper.add(nstep).equals(1)){
+					Logger.getLogger(TestCaseUtil.class).error("SQL Error copying step ID:"+nstep.getId());
+					return false;
+				}
+			}
+			return true;
+		}else{
+			Logger.getLogger(TestCaseUtil.class).error("SQL Error copying test ID:"+test.getId());
+			return false;
+		}
+	}
+
 	public static boolean isUsedTestCase(TestCase testCase) {
 		SqlSessionMapper<TestCaseMapper> sesMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
 		// Check if there is any result with this testcase
 		List<Result> tres = sesMapper.getSqlSession().getMapper(ResultMapper.class).getAllByTestCase(testCase.getId());
 		sesMapper.close();
-		boolean allOpened=true;
-		for  (Result r : tres){
+		boolean allOpened = true;
+		for (Result r : tres) {
 			allOpened = allOpened && r.getSession().isOpened();
 		}
 		return !allOpened;
@@ -148,8 +183,8 @@ public class TestCaseUtil {
 		}
 		JWTestUtil.cleanDeadElements();
 	}
-	
-	public static void cleanTestCase(){
+
+	public static void cleanTestCase() {
 		SqlSessionMapper<TestCaseMapper> sesDelTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
 		sesDelTestMapper.getMapper().cleanTestCase();
 		sesDelTestMapper.commit();

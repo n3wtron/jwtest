@@ -7,6 +7,11 @@
 			<hr>
 			<a wicket:id="updRequirementLnk"><img width="32px" height="32px" wicket:id="updateRequirementImg" wicket:message="title:requirement.update"/></a>
 			<a wicket:id="delRequirementLnk"><img width="32px" height="32px" wicket:id="deleteRequirementImg" wicket:message="title:requirement.delete"/></a>
+			<hr>
+			<form wicket:id="copyFrm">
+				<select wicket:id="prjList"></select>
+				<input type="submit" wicket:id="copyBtn" wicket:message="value:copy"/>
+			</form>
 		</div>
 		<div id="title">
 			<wicket:message  key="requirement"/>: <span wicket:id="requirementName"></span>
