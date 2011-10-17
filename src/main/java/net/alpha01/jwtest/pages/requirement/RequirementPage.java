@@ -84,9 +84,11 @@ public class RequirementPage extends LayoutPage {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void onSubmit() {
+				BigInteger curReqID = req.getId();
 				SqlSessionMapper<RequirementMapper> sesMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
 				if (RequirementUtil.copyRequirement(req, destCopyMovePrjModel.getObject(), sesMapper)){
 					sesMapper.commit();
+					setResponsePage(RequirementPage.class,new PageParameters().add("idReq", curReqID));
 				}else{
 					error("SQL Error");
 					sesMapper.rollback();
