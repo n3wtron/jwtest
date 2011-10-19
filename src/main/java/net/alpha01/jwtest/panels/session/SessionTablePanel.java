@@ -13,6 +13,7 @@ import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.pages.session.SessionsPage;
 import net.alpha01.jwtest.panels.PanelAjaxLink;
+import net.alpha01.jwtest.panels.PanelLink;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -28,6 +29,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class SessionTablePanel extends Panel {
 	private static final long serialVersionUID = 1L;
@@ -72,14 +74,7 @@ public class SessionTablePanel extends Panel {
 
 			@Override
 			public void populateItem(Item<ICellPopulator<Session>> item, String contentId, final IModel<Session> model) {
-				item.add(new PanelAjaxLink(contentId,model.getObject().getId().toString()) {
-					private static final long serialVersionUID = 1L;
-					@Override
-					protected void onAjaxClick(AjaxRequestTarget target) {
-						((JWTestSession)getWebPage().getSession()).setCurrentSession(model.getObject());
-						setResponsePage(SessionsPage.class);
-					}
-				});
+				item.add(new PanelLink(contentId,model.getObject().getId().toString(), SessionsPage.class, new PageParameters().add("idSession",model.getObject().getId())));
 			}
 		});
 		columns.add(new PropertyColumn<Session>(new StringResourceModel("version", this, null), "version"));
