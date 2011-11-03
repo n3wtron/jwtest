@@ -46,6 +46,9 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 
+import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
+import com.google.code.jqwicket.JQContributionConfig;
+
 public class WicketApplication extends AuthenticatedWebApplication {
 
 	public WicketApplication() {
@@ -53,7 +56,7 @@ public class WicketApplication extends AuthenticatedWebApplication {
 
 	@Override
 	protected void init() {
-		super.init();
+		super.getComponentPreOnBeforeRenderListeners().add(new JQComponentOnBeforeRenderListener(new JQContributionConfig().withDefaultJQueryUi()));
 		mountPage("/TestCaseDotPage",TestCaseDotPage.class);
 		mountPage("/RequirementDotPage",RequirementDotPage.class);
 		mountPage("/RequirementPage",RequirementPage.class);
@@ -94,6 +97,7 @@ public class WicketApplication extends AuthenticatedWebApplication {
 		mountPage("/UpdateStepPage",UpdateStepPage.class);
 		getMarkupSettings().setAutomaticLinking(true);
 		getDebugSettings().setAjaxDebugModeEnabled(false);
+		
 	}
 
 	@Override

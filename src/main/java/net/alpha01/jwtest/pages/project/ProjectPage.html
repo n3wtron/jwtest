@@ -3,17 +3,28 @@
 <wicket:extend>
 	<div id="topic">
 		<div id="menu">
-				<a wicket:id="addRequirementLnk"><img width="32px" height="32px" wicket:id="addRequirementImg" wicket:message="title:requirement.add"/></a>
-				<a wicket:id="addPlanLnk"><img width="32px" height="32px" wicket:id="addPlanImg" wicket:message="title:plan.add"/></a>
-				<a wicket:id="startSessionLnk"><img width="32px" height="32px" wicket:id="addSessionImg" wicket:message="title:session.start"/></a>
-				<hr/>
-			 	<a wicket:id="projectRolesLnk"><img width="32px" height="32px" wicket:id="rolesProjectImg" wicket:message="title:project.permission"/></a> 
-			 	<a wicket:id="updateProjectLnk"><img width="32px" height="32px" wicket:id="updateProjectImg" wicket:message="title:project.update"/></a> 
-				<a wicket:id="versionsProjectLnk"><img width="32px" height="32px" wicket:id="versionsProjectImg" wicket:message="title:project.versions"/></a> 
-				<a wicket:id="deleteProjectLnk"><img width="32px" height="32px" wicket:id="deleteRequirementImg" wicket:message="title:project.delete"/></a>
-				<hr/>
-				<a wicket:id="exportLnk"><img width="32px" height="32px" wicket:id="exportImg" wicket:message="title:export"/></a>
-				
+			<a wicket:id="addRequirementLnk"><img width="32px" height="32px"
+				wicket:id="addRequirementImg" wicket:message="title:requirement.add" /></a>
+			<a wicket:id="addPlanLnk"><img width="32px" height="32px"
+				wicket:id="addPlanImg" wicket:message="title:plan.add" /></a> <a
+				wicket:id="startSessionLnk"><img width="32px" height="32px"
+				wicket:id="addSessionImg" wicket:message="title:session.start" /></a>
+			<hr />
+			<a wicket:id="projectRolesLnk"><img width="32px" height="32px"
+				wicket:id="rolesProjectImg"
+				wicket:message="title:project.permission" /></a> <a
+				wicket:id="updateProjectLnk"><img width="32px" height="32px"
+				wicket:id="updateProjectImg" wicket:message="title:project.update" /></a>
+			<a wicket:id="versionsProjectLnk"><img width="32px" height="32px"
+				wicket:id="versionsProjectImg"
+				wicket:message="title:project.versions" /></a> <a
+				wicket:id="deleteProjectLnk"><img width="32px" height="32px"
+				wicket:id="deleteRequirementImg"
+				wicket:message="title:project.delete" /></a>
+			<hr />
+			<a wicket:id="exportLnk"><img width="32px" height="32px"
+				wicket:id="exportImg" wicket:message="title:export" /></a>
+
 		</div>
 
 		<div id="title">
@@ -24,13 +35,17 @@
 			<span wicket:id="projectDescription"></span>
 		</div>
 	</div>
-	<div id="content">
-		<div align="center" wicket:id="requirementsTable"></div>
-		<div style="text-align: center;" id="bottomButton">
+	<div id="content" wicket:id="content" class="tab_container">
+		<ul class="tabs">
+			<li><a href="#tabs-1"><wicket:message key="requirements" /></a></li>
+			<li><a href="#tabs-2"><wicket:message key="plans" /></a></li>
+			<li><a href="#bottomButton">Graphs</a></li>
+		</ul>
+		<div id="tabs-1" class="tab_content" wicket:id="requirementsTable"></div>
+		<div id="tabs-2" class="tab_content" wicket:id="plansTable"></div>
+		<div id="bottomButton" style="border-top:1px solid #000000;text-align: center;">
 			<a wicket:id="reqGraphLnk">Show Dependency Graph</a>
 		</div>
-		<br />
-		<div align="center" wicket:id="plansTable"></div>
 	</div>
 
 </wicket:extend>

@@ -13,6 +13,7 @@ import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.dao.TestCaseMapper;
 import net.alpha01.jwtest.pages.HomePage;
 import net.alpha01.jwtest.pages.LayoutPage;
+import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.panels.session.SessionTablePanel;
 import net.alpha01.jwtest.panels.testcase.TestCasesTablePanel;
 import net.alpha01.jwtest.util.JWTestUtil;
@@ -21,6 +22,10 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
+
+import com.google.code.jqwicket.ui.tabs.TabsOptions;
+import com.google.code.jqwicket.ui.tabs.TabsWebMarkupContainer;
 
 public class PlanPage extends LayoutPage {
 	private static final long serialVersionUID = 1L;
@@ -45,9 +50,12 @@ public class PlanPage extends LayoutPage {
 			add((new EmptyLink<Void>("deletePlanLnk")).add(new ContextImage("deletePlanImg", "images/delete_plan.png")).setVisible(false));
 		}
 		add(new Label("planName", planName));
+		TabsOptions options=new TabsOptions().addCssResourceReferences(new CssResourceReference(ProjectPage.class, "tabs.css"));
+		TabsWebMarkupContainer content = new TabsWebMarkupContainer("content",options);
 		List<TestCase> tests = sesTestMapper.getMapper().getAllByPlan(plan.getId());
-		add(new TestCasesTablePanel("testsTable", tests, 15, false));
-		add(new SessionTablePanel("sessionsTable", plan.getId().intValue(), 15));
+		content.add(new TestCasesTablePanel("testsTable", tests, 15, false));
+		content.add(new SessionTablePanel("sessionsTable", plan.getId().intValue(), 15));
+		add(content);
 		sesTestMapper.close();
 	}
 }

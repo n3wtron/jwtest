@@ -27,7 +27,6 @@ import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.pages.project.ProjectPage;
 import net.alpha01.jwtest.pages.requirement.RequirementPage;
 import net.alpha01.jwtest.pages.step.AddStepPage;
-import net.alpha01.jwtest.panels.CloseablePanel;
 import net.alpha01.jwtest.panels.attachment.AttachmentPanel;
 import net.alpha01.jwtest.panels.result.ResultsTablePanel;
 import net.alpha01.jwtest.panels.step.StepsTablePanel;
@@ -42,9 +41,12 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
+
+import com.google.code.jqwicket.ui.tabs.TabsOptions;
+import com.google.code.jqwicket.ui.tabs.TabsWebMarkupContainer;
 
 public class TestCasePage extends LayoutPage {
 	private static final long serialVersionUID = 1L;
@@ -89,24 +91,13 @@ public class TestCasePage extends LayoutPage {
 			add((new EmptyLink<Void>("updTestLnk")).add(new ContextImage("updateTestImg", "images/update_test.png")).setVisible(false));
 		}
 		add(new BookmarkablePageLinkSecure<String>("delTestLnk", DeleteTestCasePage.class, lnkParam,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("deleteTestImg", "images/delete_test.png")));
-
+		TabsOptions options=new TabsOptions().addCssResourceReferences(new CssResourceReference(ProjectPage.class, "tabs.css"));
+		TabsWebMarkupContainer content = new TabsWebMarkupContainer("content",options);
+		
+		
 		final Model<Boolean> isAuthorized = JWTestUtil.isAuthorized(Roles.ADMIN, "PROJECT_ADMIN", "MANAGER");
 		//ATTACHMENTS TABLE
-		final Model<AttachmentPanel> attachPanelModel=new Model<AttachmentPanel>();
-		CloseablePanel attachmentsPanel;
-		add(attachmentsPanel = new CloseablePanel("attachmentsPanel",JWTestUtil.translate("attachments",this),false){
-			private static final long serialVersionUID = 1L;
-			@Override
-			public Panel getContentPanel(String id) {
-				attachPanelModel.setObject(new AttachmentPanel(id, test, false, isAuthorized.getObject(), isAuthorized.getObject()));
-				return attachPanelModel.getObject();
-			}
-		});
-		
-		if (attachPanelModel.getObject().getSize()==0){
-			attachmentsPanel.setVisible(false);
-		}
-		
+		content.add( new AttachmentPanel("attachmentsPanel", test, false, isAuthorized.getObject(), isAuthorized.getObject()));
 		
 		// GRAPH
 		HashMap<String, BigDecimal> graphValues = new HashMap<String, BigDecimal>();
@@ -116,9 +107,9 @@ public class TestCasePage extends LayoutPage {
 			graphColors.put("SUCCESS", Color.GREEN);
 			graphValues.put("FAILED", BigDecimal.valueOf(100 - test.getPercSuccess().floatValue()));
 			graphColors.put("FAILED", Color.RED);
-			add(new Image("chartImage", new PieChartImageResource(null, graphValues, graphColors, 500, 300)));
+			content.add(new Image("chartImage", new PieChartImageResource(null, graphValues, graphColors, 500, 300)));
 		} else {
-			add(new Image("chartImage","chartImage").setVisible(false));
+			content.add(new Image("chartImage","chartImage").setVisible(false));
 		}
 
 		final Model<Boolean> updatePermission=JWTestUtil.isAuthorized(Roles.ADMIN,"PROJECT_ADMIN","MANAGER");
@@ -164,12 +155,14 @@ public class TestCasePage extends LayoutPage {
 				}
 			}
 		});
-		add(selForm);
+		content.add(selForm);
 		
 		//RESULTS Table
 		ResultMapper resMapper = sesTestMapper.getSqlSession().getMapper(ResultMapper.class);
 		List<Result> results = resMapper.getAllByTestCase(test.getId());
-		add(new ResultsTablePanel("resultsTable", JWTestUtil.translate("results", this),results, 5,updatePermission.getObject() ));
+		content.add(new ResultsTablePanel("resultsTable", JWTestUtil.translate("results", this),results, 5,updatePermission.getObject() ));
 		sesTestMapper.close();
+		add(content);
 	}
 }
+

@@ -1,31 +1,52 @@
-<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <wicket:extend>
 	<div id="topic">
 		<div id="menu">
-			<a wicket:id="addStepLnk"><img width="32px" height="32px" wicket:id="addStepImg" wicket:message="title:step.add"/></a>
+			<a wicket:id="addStepLnk"><img width="32px" height="32px"
+				wicket:id="addStepImg" wicket:message="title:step.add" /></a>
 			<hr>
-			<a wicket:id="updTestLnk"><img width="32px" height="32px" wicket:id="updateTestImg" wicket:message="title:test.update"/></a>
-			<a wicket:id="delTestLnk"><img width="32px" height="32px" wicket:id="deleteTestImg" wicket:message="title:test.delete"/></a>
+			<a wicket:id="updTestLnk"><img width="32px" height="32px"
+				wicket:id="updateTestImg" wicket:message="title:test.update" /></a> <a
+				wicket:id="delTestLnk"><img width="32px" height="32px"
+				wicket:id="deleteTestImg" wicket:message="title:test.delete" /></a>
 		</div>
 		<div id="title">
-			<b><wicket:message key="testcase"/></b>: <span wicket:id="testCaseName"></span>
+			<b><wicket:message key="testcase" /></b>: <span
+				wicket:id="testCaseName"></span>
 		</div>
 		<div id="description">
-			<b><wicket:message key="requirement"/></b>: <a wicket:id="requirementLnk"><span wicket:id="requirementName"></span></a><br/><br/>
-			<b><wicket:message key="description"/>:</b><br/><span wicket:id="testCaseDescription"></span><br/>
-			<b><wicket:message key="expected_result"/>:</b><br/><span wicket:id="testCaseExpectedResult"></span>
-			<div style="text-align:center;" wicket:id="attachmentsPanel"></div>
+			<b><wicket:message key="requirement" /></b>: <a
+				wicket:id="requirementLnk"><span wicket:id="requirementName"></span></a><br />
+			<br /> <b><wicket:message key="description" />:</b><br />
+			<span wicket:id="testCaseDescription"></span><br /> <b><wicket:message
+					key="expected_result" />:</b><br />
+			<span wicket:id="testCaseExpectedResult"></span>
+
 		</div>
-		<div id="description" style="width:100%; text-align:center;"><img wicket:id="chartImage"/></div>	
 	</div>
-	<div id="content">
-		<form wicket:id="selForm">
-			<div wicket:id="stepsPanel"></div>
-			<div id="bottomButton">
-				<input type="submit" wicket:id="delBtn" wicket:message="value:delete"/>
-			</div>
-		</form><br/>
-		<div wicket:id="resultsTable"></div>
+	<div id="content" wicket:id="content" class="tab_container">
+		<ul class="tabs">
+			<li><a href="#stepsTab"><wicket:message key="steps" /></a></li>
+			<li><a href="#attachmentsTab"><wicket:message key="attachments" /></a></li>
+			<li><a href="#resultTab"><wicket:message key="results" /></a></li>
+			<li><a href="#chartTab">Graphs</a></li>
+		</ul>
+		<div id="stepsTab">
+			<form wicket:id="selForm">
+				<div wicket:id="stepsPanel"></div>
+				<div id="bottomButton">
+					<input type="submit" wicket:id="delBtn"
+						wicket:message="value:delete" />
+				</div>
+			</form>
+		</div>
+		<div id="attachmentsTab" style="text-align: center;" wicket:id="attachmentsPanel"></div>
+		<div id="resultTab" wicket:id="resultsTable"></div>
+		<div id="chartTab" class="description" style="width: 100%; text-align: center;border-collapse:collapse;border:1px solid #000000; border-top:0px;">
+			<div id="tableTitle">Graphs</div>
+			<img wicket:id="chartImage" />
+		</div>
 	</div>
 </wicket:extend>
 </html>

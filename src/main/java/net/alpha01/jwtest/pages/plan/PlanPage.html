@@ -1,17 +1,25 @@
-<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <wicket:extend>
 	<div id="topic">
 		<div id="menu">
-			<a wicket:id="updatePlanLnk"><img width="32px" height="32px" wicket:id="updatePlanImg" wicket:message="title:plan.update"/></a>
-			<a wicket:id="deletePlanLnk"><img width="32px" height="32px" wicket:id="deletePlanImg" wicket:message="title:plan.delete"/></a>
+			<a wicket:id="updatePlanLnk"><img width="32px" height="32px"
+				wicket:id="updatePlanImg" wicket:message="title:plan.update" /></a> <a
+				wicket:id="deletePlanLnk"><img width="32px" height="32px"
+				wicket:id="deletePlanImg" wicket:message="title:plan.delete" /></a>
 		</div>
 		<div id="title">
-			<wicket:message key="title" />: <span wicket:id="planName"></span>
+			<wicket:message key="title" />
+			: <span wicket:id="planName"></span>
 		</div>
 	</div>
-	<div id="content">
-		<div wicket:id="testsTable"></div><br/>
-		<div wicket:id="sessionsTable"></div>
+	<div id="content" wicket:id="content" class="tab_container">
+		<ul class="tabs">
+			<li><a href="#tabs-1"><wicket:message key="testcases" /></a></li>
+			<li><a href="#tabs-2"><wicket:message key="sessions" /></a></li>
+		</ul>
+		<div id="tabs-1" wicket:id="testsTable"></div>
+		<div id="tabs-2" wicket:id="sessionsTable"></div>
 	</div>
 </wicket:extend>
 </html>

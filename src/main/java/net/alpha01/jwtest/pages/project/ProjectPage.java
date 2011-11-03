@@ -12,15 +12,23 @@ import net.alpha01.jwtest.pages.session.StartSessionPage;
 import net.alpha01.jwtest.panels.plan.PlansTablePanel;
 import net.alpha01.jwtest.panels.requirement.RequirementsTablePanel;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
+
+import com.google.code.jqwicket.JQBehaviors;
+import com.google.code.jqwicket.api.JQOptions;
+import com.google.code.jqwicket.ui.tabs.TabsOptions;
+import com.google.code.jqwicket.ui.tabs.TabsWebMarkupContainer;
 
 public class ProjectPage extends LayoutPage{
-	
+	private static final long serialVersionUID = 1L;
+
 	public ProjectPage(){
 		if (getSession().getCurrentProject()==null){
 			error("Nessun progetto selezionato");
@@ -48,11 +56,14 @@ public class ProjectPage extends LayoutPage{
 			add(new BookmarkablePageLinkSecure<String>("deleteProjectLnk", DeleteProjectPage.class, Roles.ADMIN,"PROJECT_ADMIN").add(new ContextImage("deleteRequirementImg", "images/delete_folder.png")));
 			add(new BookmarkablePageLink<String>("exportLnk", ExportPage.class).add(new ContextImage("exportImg", "images/export.png")));
 			
+			TabsOptions options=new TabsOptions().addCssResourceReferences(new CssResourceReference(getClass(), "tabs.css"));
+			TabsWebMarkupContainer content = new TabsWebMarkupContainer("content",options);
 			
-			add(new RequirementsTablePanel("requirementsTable", getSession().getCurrentProject().getId().intValue()));
+			content.add(new RequirementsTablePanel("requirementsTable", getSession().getCurrentProject().getId().intValue()));
 			//PLANS Table
-			add (new PlansTablePanel("plansTable",getSession().getCurrentProject().getId().intValue(),5));
-			add(new BookmarkablePageLink<String>("reqGraphLnk",RequirementDotPage.class));
+			content.add (new PlansTablePanel("plansTable",getSession().getCurrentProject().getId().intValue(),5));
+			content.add(new BookmarkablePageLink<String>("reqGraphLnk",RequirementDotPage.class));
+			add(content);
 		}
 	}
 }
