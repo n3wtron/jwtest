@@ -7,3 +7,10 @@ for DIR in $(find ./ -type d); do
     echo -e "</pre>\n</body>\n</html>"
   ) > "${DIR}/index.html"
 done
+#build sha1sum
+for fl in $(find ./ -type f); do
+	echo $fl | grep ".*index\.html$"
+	if [ $? -eq 1 -a "$fl" != "$0" ];then
+		sha1sum $fl > $fl.sha1
+	fi
+done
