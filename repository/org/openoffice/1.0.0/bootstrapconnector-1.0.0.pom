@@ -1,7 +1,0 @@
-<project>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.openoffice</groupId>
-	<artifactId>bootstrapconnector</artifactId>
-	<name>bootstrap</name>
-	<description>bootstrap</description>
-</project>
