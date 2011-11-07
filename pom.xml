@@ -22,7 +22,12 @@
 		<slf4j.version>1.5.8</slf4j.version>
 		<log4j.version>1.2.14</log4j.version>
 	</properties>
-	
+	<repositories>
+		<repository>
+			<id>jqwicket</id>
+			<url>http://jqwicket.googlecode.com/svn/m2-repo/releases/</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.code.jqwicket</groupId>
