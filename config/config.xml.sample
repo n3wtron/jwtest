@@ -35,4 +35,12 @@
 	<mantis>
 		<url>mantisurl</url>
 	</mantis>
+	<export>
+		<type>ODS</type>
+	</export>
+	<openoffice>
+		<!-- /usr/lib/libreoffice/program/ -->
+		<oooExeFolder>C:\Program Files (x86)\OpenOffice.org 3\program\</oooExeFolder>
+		<template>c:\tmp\PianoSessioneDiTest.ods</template>
+	</openoffice>
 </configuration>

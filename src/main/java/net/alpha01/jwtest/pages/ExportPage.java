@@ -13,9 +13,14 @@ import net.alpha01.jwtest.dao.SqlConnection;
 import net.alpha01.jwtest.dao.SqlSessionMapper;
 import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.exports.PlanCSVExporter;
+import net.alpha01.jwtest.exports.PlanODSExporter;
 import net.alpha01.jwtest.exports.RequirementCSVExporter;
+import net.alpha01.jwtest.exports.RequirementODSExporter;
 import net.alpha01.jwtest.exports.ResultCSVExporter;
+import net.alpha01.jwtest.exports.ResultODSExporter;
 import net.alpha01.jwtest.exports.TestCaseCSVExporter;
+import net.alpha01.jwtest.exports.TestCaseODSExporter;
+import net.alpha01.jwtest.util.JWTestConfig;
 
 import org.apache.log4j.Logger;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -25,29 +30,39 @@ import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
-import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.resource.FileResourceStream;
 
 public class ExportPage extends LayoutPage {
 	private static final long serialVersionUID = 1L;
 	private Model<Session> selectedSession = new Model<Session>();
 	private Model<Plan> selectedPlan = new Model<Plan>();
-
+	private String type;
+	private String ext;
+	
 	public ExportPage() {
+		type=JWTestConfig.getProp("export.type");
+		ext="ODS".equals(type)?".ods":"csv";
+		
 		IModel<File> requirementCVSfileModel = new TmpFileDownloadModel() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected File getFile() {
 				try {
-					return RequirementCSVExporter.exportToCSV();
+					if ("ODS".equals(type)){
+						return RequirementODSExporter.exportToODS();
+					}
+					else{
+						return RequirementCSVExporter.exportToCSV();
+					}
 				} catch (JWTestException e) {
 					return null;
 				}
 			}
 		};
-		add(new DownloadLink("requirementsExportLnk", requirementCVSfileModel, getSession().getCurrentProject().getName() + "_requirements.csv").add(new ContextImage("exportRequirementsImg", "images/export_requirements.png")));
+		add(new DownloadLink("requirementsExportLnk", requirementCVSfileModel, getSession().getCurrentProject().getName() + "_requirements."+ext).add(new ContextImage("exportRequirementsImg", "images/export_requirements.png")));
 
 		IModel<File> testCaseCVSfileModel = new TmpFileDownloadModel() {
 			private static final long serialVersionUID = 1L;
@@ -55,29 +70,43 @@ public class ExportPage extends LayoutPage {
 			@Override
 			protected File getFile() {
 				try {
-					return TestCaseCSVExporter.exportToCSV();
+					if ("ODS".equals(type)){
+						return TestCaseODSExporter.exportToODS();
+					}
+					else{
+						return TestCaseCSVExporter.exportToCSV();
+					}
 				} catch (JWTestException e) {
 					return null;
 				}
 			}
 		};
-		add(new DownloadLink("testcasesExportLnk", testCaseCVSfileModel, getSession().getCurrentProject().getName() + "_testcases.csv").add(new ContextImage("exportTestcasesImg", "images/export_testcases.png")));
+		add(new DownloadLink("testcasesExportLnk", testCaseCVSfileModel, getSession().getCurrentProject().getName() + "_testcases."+ext).add(new ContextImage("exportTestcasesImg", "images/export_testcases.png")));
 		 
 		Form<String> planForm = new Form<String>("planForm") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit() {
+				type=JWTestConfig.getProp("export.type");
+				ext="ODS".equals(type)?".ods":"csv";
 				try {
-					final File csvFile = PlanCSVExporter.exportToCSV(selectedPlan.getObject().getId().intValue());
-					getRequestCycle().scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(new FileResourceStream(csvFile)){
+					final File csvFile ;
+					if ("ODS".equals(type)){
+						csvFile = PlanODSExporter.exportToODS(selectedPlan.getObject().getId().intValue());
+					}
+					else{
+						csvFile = PlanCSVExporter.exportToCSV(selectedPlan.getObject().getId().intValue());
+					}
+					
+					RequestCycle.get().scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(new FileResourceStream(csvFile),JWTestSession.getProject().getName() +"_"+selectedPlan.getObject().getName()+ "_plan."+ext) {
 						@Override
 						public void detach(IRequestCycle requestCycle) {
 							Logger.getLogger(getPageClass()).debug("Temporary file deleted");
 							csvFile.delete();
 							super.detach(requestCycle);
 						}
-					}.setFileName(JWTestSession.getProject().getName() +"_"+selectedPlan.getObject().getName()+ "_plan.csv").setContentDisposition(ContentDisposition.ATTACHMENT));
+					});
 				} catch (JWTestException e) {
 					error("FATAL: Cannot export session");
 				}
@@ -96,16 +125,26 @@ public class ExportPage extends LayoutPage {
 
 			@Override
 			protected void onSubmit() {
-				
+				type=JWTestConfig.getProp("export.type");
+				ext="ODS".equals(type)?".ods":"csv";
 				try {
-					final File csvFile = ResultCSVExporter.exportToCSV(selectedSession.getObject().getId().intValue());
-					getRequestCycle().scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(new FileResourceStream(csvFile)){
+					final File csvFile;
+					if ("ODS".equals(type)){
+						csvFile = ResultODSExporter.exportToODS(selectedSession.getObject().getId().intValue());
+					}
+					else{
+						csvFile = ResultCSVExporter.exportToCSV(selectedSession.getObject().getId().intValue());
+					}
+					
+					
+					RequestCycle.get().scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(new FileResourceStream(csvFile),JWTestSession.getProject().getName() + "_"+selectedSession.getObject().getStart_date()+"_sessionresult."+ext) {
+						@Override
 						public void detach(IRequestCycle requestCycle) {
 							Logger.getLogger(getPageClass()).debug("Temporary file deleted");
 							csvFile.delete();
 							super.detach(requestCycle);
-						};
-					}.setFileName(JWTestSession.getProject().getName() + "_"+selectedSession.getObject().getStart_date()+"_sessionresult.csv").setContentDisposition(ContentDisposition.ATTACHMENT));
+						}
+					});
 				} catch (JWTestException e) {
 					error("FATAL: Cannot export session");
 				}
