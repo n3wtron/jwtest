@@ -110,7 +110,7 @@ public class AddRequirementPage extends LayoutPage implements Serializable {
 		addForm.add(typeFld);
 
 		addForm.add(numFld);
-		addForm.add(new TextField<String>("nameFld", new PropertyModel<String>(req, "name")));
+		addForm.add(new TextField<String>("nameFld", new PropertyModel<String>(req, "name")).setRequired(true));
 		addForm.add(new TextArea<String>("descriptionFld", new PropertyModel<String>(req, "description")));
 		add(addForm);
 	}
