@@ -32,6 +32,7 @@ public class DeletePlanPage extends LayoutPage {
 		}
 		SqlSessionMapper<TestCaseMapper> sesTestMapper=SqlConnection.getSessionMapper(TestCaseMapper.class);
 		final Plan plan = sesTestMapper.getSqlSession().getMapper(PlanMapper.class).get(BigInteger.valueOf(params.get("idPlan").toLong()));
+		sesTestMapper.close();
 		
 		add (new Label("planName",plan.getName()));
 		Form<Project> delProjectForm = new Form<Project>("delForm");

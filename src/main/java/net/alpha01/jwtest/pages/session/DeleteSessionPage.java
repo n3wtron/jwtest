@@ -29,7 +29,9 @@ public class DeleteSessionPage extends LayoutPage {
 		}
 		SqlSessionMapper<SessionMapper> sesTestMapper = SqlConnection.getSessionMapper(SessionMapper.class);
 		ses=sesTestMapper.getMapper().get(BigInteger.valueOf(params.get("idSession").toLong()));
+		sesTestMapper.close();
 		add (new Label("sessionName",ses.toString()));
+		
 		Form<Project> delSessionForm = new Form<Project>("delSessionForm");
 		delSessionForm.add(new Button("YesBtn"){
 			private static final long serialVersionUID = 1L;
