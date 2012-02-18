@@ -68,7 +68,9 @@ public class AddUserPage extends LayoutPage {
 					error("User already present");
 					sesMapper.rollback();
 				}
-				sesMapper.close();
+				finally{
+					sesMapper.close();
+				}
 			};
 		};
 

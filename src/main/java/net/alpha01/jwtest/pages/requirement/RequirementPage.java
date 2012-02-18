@@ -55,8 +55,8 @@ public class RequirementPage extends LayoutPage {
 
 	private Model<Requirement> destinationReqModel = new Model<Requirement>();
 	private HashMap<TestCase, Model<Boolean>> selectedTests = new HashMap<TestCase, Model<Boolean>>();
-	private Model<Project> destCopyMovePrjModel=new Model<Project>();
-	
+	private Model<Project> destCopyMovePrjModel = new Model<Project>();
+
 	public RequirementPage(PageParameters params) {
 		super(params);
 		SqlSessionMapper<RequirementMapper> sesReqMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
@@ -69,35 +69,40 @@ public class RequirementPage extends LayoutPage {
 		// LINK
 		PageParameters reqParams = new PageParameters();
 		reqParams.add("idReq", req.getId().toString());
-		add(new BookmarkablePageLinkSecure<String>("addTestLnk", AddTestCasePage.class, reqParams,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("addTestImg", "images/add_test.png")));
-		add(new BookmarkablePageLinkSecure<String>("delRequirementLnk", DeleteRequirementPage.class, reqParams,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("deleteRequirementImg", "images/delete_requirement.png")));
-		add(new BookmarkablePageLinkSecure<String>("updRequirementLnk", UpdateRequirementPage.class, reqParams,Roles.ADMIN,"PROJECT_ADMIN","MANAGER").add(new ContextImage("updateRequirementImg", "images/update_requirement.png")));
-		
-		//Copy/Move Form
-		Form<Void> copyFrm=new Form<Void>("copyFrm");
-		//Retrieve all projects less current
+		add(new BookmarkablePageLinkSecure<String>("addTestLnk", AddTestCasePage.class, reqParams, Roles.ADMIN, "PROJECT_ADMIN", "MANAGER").add(new ContextImage("addTestImg", "images/add_test.png")));
+		add(new BookmarkablePageLinkSecure<String>("delRequirementLnk", DeleteRequirementPage.class, reqParams, Roles.ADMIN, "PROJECT_ADMIN", "MANAGER").add(new ContextImage("deleteRequirementImg", "images/delete_requirement.png")));
+		add(new BookmarkablePageLinkSecure<String>("updRequirementLnk", UpdateRequirementPage.class, reqParams, Roles.ADMIN, "PROJECT_ADMIN", "MANAGER").add(new ContextImage("updateRequirementImg", "images/update_requirement.png")));
+
+		// Copy/Move Form
+		Form<Void> copyFrm = new Form<Void>("copyFrm");
+		// Retrieve all projects less current
 		List<Project> allPrj = sesReqMapper.getSqlSession().getMapper(ProjectMapper.class).getAll();
 		allPrj.remove(JWTestSession.getProject());
-		DropDownChoice<Project> prjList = new DropDownChoice<Project>("prjList",destCopyMovePrjModel,allPrj);
+		DropDownChoice<Project> prjList = new DropDownChoice<Project>("prjList", destCopyMovePrjModel, allPrj);
 		copyFrm.add(prjList);
-		copyFrm.add(new SubmitLink("copyBtn"){
+		copyFrm.add(new SubmitLink("copyBtn") {
 			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onSubmit() {
 				BigInteger curReqID = req.getId();
 				SqlSessionMapper<RequirementMapper> sesMapper = SqlConnection.getSessionMapper(RequirementMapper.class);
-				if (RequirementUtil.copyRequirement(req, destCopyMovePrjModel.getObject(), sesMapper)){
-					sesMapper.commit();
-					setResponsePage(RequirementPage.class,new PageParameters().add("idReq", curReqID));
-				}else{
-					error("SQL Error");
-					sesMapper.rollback();
+				try {
+					if (RequirementUtil.copyRequirement(req, destCopyMovePrjModel.getObject(), sesMapper)) {
+						sesMapper.commit();
+						setResponsePage(RequirementPage.class, new PageParameters().add("idReq", curReqID));
+					} else {
+						error("SQL Error");
+						sesMapper.rollback();
+					}
+				} finally {
+					sesMapper.close();
 				}
-				
+
 			}
 		});
 		add(copyFrm);
-		
+
 		// GRAPHS
 		HashMap<String, BigDecimal> dataValues = new HashMap<String, BigDecimal>();
 		TestCaseMapper testMapper = sesReqMapper.getSqlSession().getMapper(TestCaseMapper.class);
@@ -110,7 +115,7 @@ public class RequirementPage extends LayoutPage {
 		}
 		if (dataValues.size() > 0) {
 			final DynamicImageResource resource = new BarChartImageResource("", dataValues, "TestCases", "Success", 600, 300);
-			add (new CloseablePanel("chartPanel","Graph", false){
+			add(new CloseablePanel("chartPanel", "Graph", false) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
@@ -118,27 +123,28 @@ public class RequirementPage extends LayoutPage {
 					return new ChartPanel(id, resource);
 				}
 			});
-			
+
 		} else {
 			add(new EmptyPanel("chartPanel"));
 		}
 
 		final Model<Boolean> isAuthorized = JWTestUtil.isAuthorized(Roles.ADMIN, "PROJECT_ADMIN", "MANAGER");
-		//ATTACHMENTS TABLE
-		final Model<AttachmentPanel> attachPanelModel=new Model<AttachmentPanel>();
+		// ATTACHMENTS TABLE
+		final Model<AttachmentPanel> attachPanelModel = new Model<AttachmentPanel>();
 		CloseablePanel attachmentsPanel;
-		add(attachmentsPanel = new CloseablePanel("attachmentsPanel",JWTestUtil.translate("attachments",this),false){
+		add(attachmentsPanel = new CloseablePanel("attachmentsPanel", JWTestUtil.translate("attachments", this), false) {
 			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Panel getContentPanel(String id) {
 				attachPanelModel.setObject(new AttachmentPanel(id, req, false, isAuthorized.getObject(), isAuthorized.getObject()));
 				return attachPanelModel.getObject();
 			}
 		});
-		if (attachPanelModel.getObject().getSize()==0){
+		if (attachPanelModel.getObject().getSize() == 0) {
 			attachmentsPanel.setVisible(false);
 		}
-		
+
 		// TEST TABLE
 		TestCasesTablePanel testsTable;
 		if (isAuthorized.getObject()) {
@@ -171,7 +177,7 @@ public class RequirementPage extends LayoutPage {
 				Iterator<Entry<TestCase, Model<Boolean>>> itT = selectedTests.entrySet().iterator();
 				boolean sqlError = false;
 				try {
-					int nSelTest =0;
+					int nSelTest = 0;
 					while (itT.hasNext() && !sqlError) {
 						Entry<TestCase, Model<Boolean>> testBool = itT.next();
 						if (testBool.getValue().getObject().booleanValue()) {
@@ -186,8 +192,8 @@ public class RequirementPage extends LayoutPage {
 							}
 						}
 					}
-					if (nSelTest==0){
-						warn(JWTestUtil.translate("testcase.not.selected",this));
+					if (nSelTest == 0) {
+						warn(JWTestUtil.translate("testcase.not.selected", this));
 					}
 					if (sqlError) {
 						sesTestMapper.rollback();
@@ -196,10 +202,12 @@ public class RequirementPage extends LayoutPage {
 					}
 				} catch (PersistenceException e) {
 					sesTestMapper.rollback();
+				} finally {
+					sesTestMapper.close();
 				}
 				selectedTests.clear();
 			}
-			
+
 		});
 
 		// MOVE BUTTON
@@ -233,7 +241,7 @@ public class RequirementPage extends LayoutPage {
 						Entry<TestCase, Model<Boolean>> testBool = itT.next();
 						if (testBool.getValue().getObject().booleanValue()) {
 							// move test
-							sqlOk&=TestCaseUtil.moveTestCase(testBool.getKey(), destinationReqModel.getObject(), sesTestMapper);
+							sqlOk &= TestCaseUtil.moveTestCase(testBool.getKey(), destinationReqModel.getObject(), sesTestMapper);
 						}
 					}
 					if (!sqlOk) {
@@ -244,12 +252,14 @@ public class RequirementPage extends LayoutPage {
 					}
 				} catch (PersistenceException e) {
 					sesTestMapper.rollback();
+				} finally {
+					sesTestMapper.close();
 				}
 				selectedTests.clear();
 			}
 		});
-		
-		//COPY BUTTON
+
+		// COPY BUTTON
 		testsForm.add(new Button("copyBtn") {
 			private static final long serialVersionUID = 1L;
 
@@ -270,7 +280,7 @@ public class RequirementPage extends LayoutPage {
 					return;
 				}
 				SqlSessionMapper<TestCaseMapper> sesTestMapper = SqlConnection.getSessionMapper(TestCaseMapper.class);
-				
+
 				Iterator<Entry<TestCase, Model<Boolean>>> itT = selectedTests.entrySet().iterator();
 				boolean sqlOk = true;
 				try {
@@ -278,7 +288,7 @@ public class RequirementPage extends LayoutPage {
 						Entry<TestCase, Model<Boolean>> testBool = itT.next();
 						if (testBool.getValue().getObject().booleanValue()) {
 							// copy test
-							sqlOk&=TestCaseUtil.copyTestCase(testBool.getKey(), destinationReqModel.getObject(), sesTestMapper);
+							sqlOk &= TestCaseUtil.copyTestCase(testBool.getKey(), destinationReqModel.getObject(), sesTestMapper);
 						}
 					}
 					if (!sqlOk) {
@@ -288,13 +298,15 @@ public class RequirementPage extends LayoutPage {
 					}
 				} catch (PersistenceException e) {
 					sesTestMapper.rollback();
+				} finally {
+					sesTestMapper.close();
 				}
 				selectedTests.clear();
 			}
 		});
 
 		reqs.remove(req);
-		DropDownChoice<Requirement> requirementsMoveList = new DropDownChoice<Requirement>("requirementsMoveList", destinationReqModel, reqs){
+		DropDownChoice<Requirement> requirementsMoveList = new DropDownChoice<Requirement>("requirementsMoveList", destinationReqModel, reqs) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -308,13 +320,11 @@ public class RequirementPage extends LayoutPage {
 			}
 		};
 		testsForm.add(requirementsMoveList);
-		
-		
-		//DOT LINK
-		testsForm.add(new BookmarkablePageLink<String>("dotGraphLnk",TestCaseDotPage.class,new PageParameters().add("idReq",req.getId())));
-		add(testsForm);
-		
-	}
 
+		// DOT LINK
+		testsForm.add(new BookmarkablePageLink<String>("dotGraphLnk", TestCaseDotPage.class, new PageParameters().add("idReq", req.getId())));
+		add(testsForm);
+
+	}
 
 }

@@ -134,14 +134,6 @@ public class ResultsTablePanel extends Panel {
 	private void createTable(SortableDataProvider<Result> dataProvider, int numRows, boolean full, boolean deletedLnk, boolean recycleLnk) {
 		ArrayList<IColumn<Result>> columns = new ArrayList<IColumn<Result>>();
 
-		columns.add(new AbstractColumn<Result>(new Model<String>("ID"), "id") {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void populateItem(Item<ICellPopulator<Result>> item, String contentId, IModel<Result> model) {
-				item.add(new PanelLink(contentId, model.getObject().getId().toString(), ResultPage.class, new PageParameters().add("idResult", model.getObject().getId().intValue())));
-			}
-		});
 		if (full) {
 			columns.add(new AbstractColumn<Result>(new StringResourceModel("start_date", this, null)) {
 				private static final long serialVersionUID = 1L;
@@ -160,7 +152,7 @@ public class ResultsTablePanel extends Panel {
 
 				@Override
 				public void populateItem(Item<ICellPopulator<Result>> item, String contentId, IModel<Result> model) {
-					item.add(new PanelLink(contentId, model.getObject().getTestCase().toString(), TestCasePage.class, new PageParameters().add("idTest", model.getObject().getId_testcase().intValue())));
+					item.add(new PanelLink(contentId, model.getObject().getTestCase().toString(), ResultPage.class, new PageParameters().add("idResult", model.getObject().getId().intValue())));
 				}
 
 				@Override
