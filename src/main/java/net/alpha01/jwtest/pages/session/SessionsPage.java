@@ -61,6 +61,7 @@ public class SessionsPage extends LayoutPage {
 		if (!params.get("idSession").isNull()){
 			//load session based on idSession parameter
 			currSession=sesMapper.getMapper().get(BigInteger.valueOf(params.get("idSession").toLong()));
+			getSession().setCurrentSession(currSession);
 		}
 		if (currSession==null){
 			//load session from WebSession
