@@ -12,12 +12,13 @@
 		</div>
 		<div id="description">
 			<b><wicket:message key="requirement" />:</b> <a wicket:id="reqLnk"><span wicket:id="reqName"></span></a><br/><br/>
-			<b>TestCase</b>: <span wicket:id="testCaseName"></span><br/><br/>
+			<b>TestCase</b>: <a wicket:id="testCaseLnk"><span wicket:id="testCaseName"></span></a><br/><br/>
 			<b><wicket:message key="description"/></b>:<br/>
 			<span wicket:id="testCaseDescription"></span><br/><br/>
 			<b><wicket:message key="expected_result"/></b>:<br/>
 			<span wicket:id="testCaseExpectedResult"></span>
 		</div>
+		<div id="attachmentsTab" style="text-align: center;" wicket:id="attachmentsPanel"></div>
 	</div>
 	<div id="content" align="center">
 		<div wicket:id="stepsTable"></div><br/>

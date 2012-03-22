@@ -17,13 +17,16 @@ import net.alpha01.jwtest.exceptions.JWTestException;
 import net.alpha01.jwtest.pages.LayoutPage;
 import net.alpha01.jwtest.pages.requirement.RequirementPage;
 import net.alpha01.jwtest.pages.session.SessionsPage;
+import net.alpha01.jwtest.pages.testcase.TestCasePage;
 import net.alpha01.jwtest.panels.attachment.AddAttachmentPanel;
+import net.alpha01.jwtest.panels.attachment.AttachmentPanel;
 import net.alpha01.jwtest.panels.step.StepsTablePanel;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.log4j.Logger;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -79,10 +82,20 @@ public class AddResultPage extends LayoutPage {
 		reqLnk.add(new Label("reqName", testCase.getRequirement().getName()));
 		add(reqLnk);
 
-		add(new Label("testCaseName", testCase.getName()));
+		BookmarkablePageLink<String> testCaseLnk = new BookmarkablePageLink<String>("testCaseLnk", TestCasePage.class, new PageParameters().add("idTest" , testCase.getId()));
+		testCaseLnk.add(new Label("testCaseName", testCase.getName()));
+		add(testCaseLnk);
+		
 		add(new HtmlLabel("testCaseDescription", testCase.getDescription()));
 		add(new HtmlLabel("testCaseExpectedResult", testCase.getExpected_result()));
 
+		//ATTACHMENTS TABLE
+		AttachmentPanel attachPnl = new AttachmentPanel("attachmentsPanel", testCase, true, false, false);
+		if (attachPnl.getSize()==0){
+			attachPnl.add(new AttributeAppender("style", "display:none;"));
+		}
+		add(attachPnl);
+		
 		Form<String> addForm = new Form<String>("addForm") {
 			private static final long serialVersionUID = 1L;
 
