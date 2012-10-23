@@ -17,7 +17,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>1.5.2</wicket.version>
+		<wicket.version>1.5.5</wicket.version>
 		<jetty.version>6.1.26</jetty.version>
 		<slf4j.version>1.5.8</slf4j.version>
 		<log4j.version>1.2.14</log4j.version>
@@ -185,7 +185,8 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
-			<version>3.0.6</version>
+			<version>3.1.0</version>
+			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
