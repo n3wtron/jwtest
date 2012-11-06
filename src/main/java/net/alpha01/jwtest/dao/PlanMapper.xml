@@ -19,7 +19,7 @@
 	</insert>
 	
 	<update id="update" parameterType="net.alpha01.jwtest.beans.Plan" flushCache="true">
-		update plans set id_project=#{id_project},new_version=#{new_version,name=#{name} where id=#{id}
+		update plans set id_project=#{id_project},new_version=#{new_version},name=#{name} where id=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="net.alpha01.jwtest.beans.Plan">
