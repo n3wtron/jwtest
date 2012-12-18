@@ -27,6 +27,8 @@ import org.apache.wicket.model.Model;
 @AuthorizeInstantiation(value={Roles.ADMIN,"PROJECT_ADMIN"})
 public class ProjectRolesPage extends LayoutPage {
 	
+	private static final long serialVersionUID = 1L;
+
 	class UserRoleForm extends Form<Role>{
 		private static final long serialVersionUID = 1L;
 		List<Role> allRoles;
@@ -47,7 +49,7 @@ public class ProjectRolesPage extends LayoutPage {
 		@Override
 		protected void onSubmit() {
 			SqlSessionMapper<ProjectMapper> sesMapper = SqlConnection.getSessionMapper(ProjectMapper.class);
-			sesMapper.getMapper().deassociateRoles(ProjectRolesPage.this.getSession().getCurrentProject());
+			sesMapper.getMapper().deassociateRoles(new ProjectUserRoles(ProjectRolesPage.this.getSession().getCurrentProject().getId(),userModel.getObject().getId()));
 			boolean sqlOk=true;
 			for (Role selRole : selectedRoles){
 				if (!sesMapper.getMapper().associateRole(new ProjectUserRoles(ProjectRolesPage.this.getSession().getCurrentProject().getId(), userModel.getObject().getId(), selRole.getId())).equals(1)){

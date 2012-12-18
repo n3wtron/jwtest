@@ -53,6 +53,6 @@ public interface ProjectMapper {
 	Integer update(Project prj)throws PersistenceException;
 	Integer delete(Project prj);
 	List<Role> getRoles(ProjectUserRoles prj);
-	Integer deassociateRoles(Project currentProject);
+	Integer deassociateRoles(ProjectUserRoles prjUser);
 	Integer associateRole(ProjectUserRoles prj);
 }

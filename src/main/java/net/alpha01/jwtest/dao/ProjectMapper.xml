@@ -27,7 +27,7 @@
 	</select>
 	
 	<delete id="deassociateRoles" parameterType="net.alpha01.jwtest.beans.Project">
-		delete from projects_users_roles where id_project=#{id}
+		delete from projects_users_roles where id_project=#{idProject} and id_user=#{idUser}
 	</delete>
 	
 	<insert id="associateRole" parameterType="net.alpha01.jwtest.dao.ProjectMapper$ProjectUserRoles">
